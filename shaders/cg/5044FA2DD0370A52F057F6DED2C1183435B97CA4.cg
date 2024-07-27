@@ -1,0 +1,44 @@
+// profile sce_fp_psp2
+
+#define cg_FragColor gl_FragColor
+#define cg_FragData1 gl_FragColor
+#define fract(x) frac(x)
+#define inversesqrt(x) rsqrt(x)
+#define samplerCube samplerCUBE
+#define vec2 float2
+#define vec3 float3
+#define vec4 float4
+
+vec4 tex(sampler2D samp, vec2 s) { return tex2D(samp, s); }
+vec4 tex(samplerCube samp, vec3 s) { return texCUBE(samp, s); }
+
+struct VertexInput {
+    vec4 _colorSet0;
+};
+
+struct VertexOutput {
+    vec4 _varying_colorSet0;
+};
+
+struct FragmentOutput {
+    vec4 _color[1];
+};
+
+static FragmentOutput _TMP4;
+static VertexOutput _input1;
+static vec4 _colorLayer00058;
+
+uniform vec4 _layer_kOpacities;
+
+void main(
+    vec4 cg_FrontColor : COLOR,
+
+    vec4 out gl_FragColor : COLOR
+) {
+
+
+    _input1._varying_colorSet0 = vec4(float(cg_FrontColor.x), float(cg_FrontColor.y), float(cg_FrontColor.z), float(cg_FrontColor.w));
+    _colorLayer00058.w = _input1._varying_colorSet0.w*_layer_kOpacities.x;
+    _TMP4._color[0] = vec4(float(_input1._varying_colorSet0.x), float(_input1._varying_colorSet0.y), float(_input1._varying_colorSet0.z), float(_colorLayer00058.w));
+    cg_FragColor = _TMP4._color[0];
+}

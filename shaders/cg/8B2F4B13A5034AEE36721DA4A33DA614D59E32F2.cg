@@ -1,0 +1,53 @@
+// profile sce_fp_psp2
+
+#define cg_FragColor gl_FragColor
+#define cg_FragData1 gl_FragColor
+#define fract(x) frac(x)
+#define inversesqrt(x) rsqrt(x)
+#define samplerCube samplerCUBE
+#define vec2 float2
+#define vec3 float3
+#define vec4 float4
+
+vec4 tex(sampler2D samp, vec2 s) { return tex2D(samp, s); }
+vec4 tex(samplerCube samp, vec3 s) { return texCUBE(samp, s); }
+
+struct VS_IN {
+    vec4 _color1;
+    vec2 _texcoord1;
+};
+
+struct VS_OUT {
+    vec4 _color;
+    vec4 _texcoord;
+    vec3 _fog;
+};
+
+static vec4 _TMP1;
+static vec4 _TMP0;
+static vec2 _c0013;
+
+uniform sampler2D _backBuffer_tex;
+uniform sampler2D _distort_tex;
+uniform vec4 _fog_color;
+
+void main(
+    vec4 cg_FrontColor : COLOR,
+    vec4 cg_TexCoord1 : TEXCOORD1,
+    vec4 cg_TexCoord0 : TEXCOORD0,
+
+    vec4 out gl_FragColor : COLOR
+) {
+
+    vec4 _vColor;
+    vec4 _offset;
+
+    _TMP0 = tex(_distort_tex, cg_TexCoord0.xy);
+    _offset = (_TMP0 - vec4( 5.00000000E-001, 5.00000000E-001, 0.00000000E+000, 0.00000000E+000))*vec4( 9.99999978E-003, 9.99999978E-003, 1.00000000E+000, 1.00000000E+000);
+    _c0013 = cg_TexCoord0.zw + _offset.xy;
+    _TMP1 = tex(_backBuffer_tex, _c0013);
+    _vColor = (_TMP1*cg_FrontColor)*2.00000000E+000;
+    _vColor.w = _vColor.w*_offset.z;
+    _vColor.xyz = _fog_color.xyz + cg_TexCoord1.x*(_vColor.xyz - _fog_color.xyz);
+    cg_FragColor = _vColor;
+}

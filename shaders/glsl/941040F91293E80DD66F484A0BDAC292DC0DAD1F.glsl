@@ -1,0 +1,160 @@
+//SharedShaders/0x429ecf0e.ios_vcode uklgonzale Wed Mar 12 15:12:51 2014
+
+precision highp float;
+
+
+
+struct VertexInput {
+    vec4 _position;
+    vec4 _normal;
+    vec4 _colorSet0;
+};
+
+struct VertexOutput {
+    vec4 _varying_position;
+    vec4 _varying_colorSet0;
+    vec2 _texcoord0;
+    float _texcoord1;
+};
+
+struct FragmentOutput {
+    vec4 _color[1];
+};
+
+VertexOutput _TMP15;
+float _TMP2;
+float _TMP6;
+float _TMP1;
+float _TMP0;
+vec3 _TMP4;
+vec3 _TMP19;
+float _TMP10;
+float _TMP9;
+float _TMP12;
+float _TMP11;
+vec4 _TMP8;
+vec4 _TMP17[4];
+vec4 _C0081[4];
+vec3 _v0085;
+vec3 _TMP770085[3];
+vec3 _r0087;
+vec4 _r0092;
+vec4 _v0092;
+vec4 _r0094;
+vec4 _r0100;
+vec4 _M0100[4];
+vec4 _v0103;
+vec4 _b0105;
+vec3 _r0114;
+float _b0118;
+float _a0120;
+attribute vec4 NORMAL;
+attribute vec4 COLOR;
+vec3 _TMP121;
+vec3 _TMP122;
+vec3 _TMP123;
+vec3 _TMP124;
+vec3 _TMP125;
+vec3 _TMP126;
+vec3 _TMP127;
+vec3 _TMP128;
+vec3 _TMP129;
+vec3 _TMP130;
+vec3 _TMP131;
+vec3 _TMP132;
+uniform vec4 _viewProj[4];
+uniform vec4 _vs_view[4];
+uniform vec4 _world[4];
+uniform vec4 _ps2ShineMtx[4];
+uniform vec4 _kTint;
+uniform vec4 _fog_params;
+attribute vec4 cg_Vertex;
+varying vec4 cg_FrontColor;
+varying vec4 cg_TexCoord1;
+varying vec4 cg_TexCoord0;
+
+ void main()
+{
+
+    float _dist;
+    float _dd;
+
+    _C0081[0] = _world[0].x*_vs_view[0] + _world[0].y*_vs_view[1] + _world[0].z*_vs_view[2] + _world[0].w*_vs_view[3];
+    _C0081[1] = _world[1].x*_vs_view[0] + _world[1].y*_vs_view[1] + _world[1].z*_vs_view[2] + _world[1].w*_vs_view[3];
+    _C0081[2] = _world[2].x*_vs_view[0] + _world[2].y*_vs_view[1] + _world[2].z*_vs_view[2] + _world[2].w*_vs_view[3];
+    _C0081[3] = _world[3].x*_vs_view[0] + _world[3].y*_vs_view[1] + _world[3].z*_vs_view[2] + _world[3].w*_vs_view[3];
+    _TMP17[0] = vec4(float(_C0081[0].x), float(_C0081[0].y), float(_C0081[0].z), float(_C0081[0].w));
+    _TMP17[1] = vec4(float(_C0081[1].x), float(_C0081[1].y), float(_C0081[1].z), float(_C0081[1].w));
+    _TMP17[2] = vec4(float(_C0081[2].x), float(_C0081[2].y), float(_C0081[2].z), float(_C0081[2].w));
+    _TMP17[3] = vec4(float(_C0081[3].x), float(_C0081[3].y), float(_C0081[3].z), float(_C0081[3].w));
+    _v0085 = vec3(float((NORMAL.xyz*2.00000000E+000 - 1.00000000E+000).x), float((NORMAL.xyz*2.00000000E+000 - 1.00000000E+000).y), float((NORMAL.xyz*2.00000000E+000 - 1.00000000E+000).z));
+    _TMP121.x = _TMP17[0].x;
+    _TMP122.y = _TMP17[0].y;
+    _TMP123.z = _TMP17[0].z;
+    _TMP770085[0] = vec3(float(_TMP121.x), float(_TMP122.y), float(_TMP123.z));
+    _TMP124.x = _TMP17[1].x;
+    _TMP125.y = _TMP17[1].y;
+    _TMP126.z = _TMP17[1].z;
+    _TMP770085[1] = vec3(float(_TMP124.x), float(_TMP125.y), float(_TMP126.z));
+    _TMP127.x = _TMP17[2].x;
+    _TMP128.y = _TMP17[2].y;
+    _TMP129.z = _TMP17[2].z;
+    _TMP770085[2] = vec3(float(_TMP127.x), float(_TMP128.y), float(_TMP129.z));
+    _r0087 = _v0085.x*_TMP770085[0];
+    _r0087 = _r0087 + _v0085.y*_TMP770085[1];
+    _r0087 = _r0087 + _v0085.z*_TMP770085[2];
+    _TMP19 = vec3(float(_r0087.x), float(_r0087.y), float(_r0087.z));
+    _v0092 = vec4(cg_Vertex.x, cg_Vertex.y, cg_Vertex.z, 1.00000000E+000);
+    _r0092 = _v0092.x*_world[0];
+    _r0092 = _r0092 + _v0092.y*_world[1];
+    _r0092 = _r0092 + _v0092.z*_world[2];
+    _r0092 = _r0092 + _v0092.w*_world[3];
+    _r0094 = _r0092.x*_viewProj[0];
+    _r0094 = _r0094 + _r0092.y*_viewProj[1];
+    _r0094 = _r0094 + _r0092.z*_viewProj[2];
+    _r0094 = _r0094 + _r0092.w*_viewProj[3];
+    _M0100[0] = vec4(float(_TMP17[0].x), float(_TMP17[0].y), float(_TMP17[0].z), float(_TMP17[0].w));
+    _M0100[1] = vec4(float(_TMP17[1].x), float(_TMP17[1].y), float(_TMP17[1].z), float(_TMP17[1].w));
+    _M0100[2] = vec4(float(_TMP17[2].x), float(_TMP17[2].y), float(_TMP17[2].z), float(_TMP17[2].w));
+    _M0100[3] = vec4(float(_TMP17[3].x), float(_TMP17[3].y), float(_TMP17[3].z), float(_TMP17[3].w));
+    _r0100 = cg_Vertex.x*_M0100[0];
+    _r0100 = _r0100 + cg_Vertex.y*_M0100[1];
+    _r0100 = _r0100 + cg_Vertex.z*_M0100[2];
+    _r0100 = _r0100 + cg_Vertex.w*_M0100[3];
+    _v0103 = vec4(float(float(((COLOR*_kTint)*2.00000000E+000).x)), float(float(((COLOR*_kTint)*2.00000000E+000).y)), float(float(((COLOR*_kTint)*2.00000000E+000).z)), float(float(((COLOR*_kTint)*2.00000000E+000).w)));
+    _b0105 = vec4(float(_v0103.x), float(_v0103.y), float(_v0103.z), float(_v0103.w));
+    _TMP8 = (_b0105);
+    _TMP15._varying_colorSet0 = vec4(float(_TMP8.x), float(_TMP8.y), float(_TMP8.z), float(_TMP8.w));
+    _TMP11 = dot(vec3(float(_TMP19.x), float(_TMP19.y), float(_TMP19.z)), vec3(float(_TMP19.x), float(_TMP19.y), float(_TMP19.z)));
+    _TMP9 = float(_TMP11);
+    _TMP12 = inversesqrt(float(_TMP9));
+    _TMP10 = float(_TMP12);
+    _TMP4 = _TMP10*_TMP19;
+    _TMP130.x = _ps2ShineMtx[0].x;
+    _TMP130.y = _ps2ShineMtx[0].y;
+    _TMP130.z = _ps2ShineMtx[0].z;
+    _r0114 = _TMP4.x*_TMP130;
+    _TMP131.x = _ps2ShineMtx[1].x;
+    _TMP131.y = _ps2ShineMtx[1].y;
+    _TMP131.z = _ps2ShineMtx[1].z;
+    _r0114 = _r0114 + _TMP4.y*_TMP131;
+    _TMP132.x = _ps2ShineMtx[2].x;
+    _TMP132.y = _ps2ShineMtx[2].y;
+    _TMP132.z = _ps2ShineMtx[2].z;
+    _r0114 = _r0114 + _TMP4.z*_TMP132;
+    _TMP15._texcoord0.xy = vec2(float(_r0114.x), float(_r0114.y));
+    _TMP0 = length(_r0100.xyz);
+    _b0118 = _TMP0 - float(_fog_params.x);
+    _TMP1 = max(0.00000000E+000, _b0118);
+    _dist = float(_TMP1);
+    _a0120 = _dist/_fog_params.z;
+    _TMP6 = min(float(_a0120), 1.00000000E+000);
+    _TMP2 = float(_TMP6);
+    _dd = float((1.00000000E+000 - float(_TMP2)));
+    _TMP15._texcoord1 = float(_dd);
+    cg_TexCoord0.xy = _TMP15._texcoord0;
+    cg_TexCoord1.x = _TMP15._texcoord1;
+    gl_Position = _r0094;
+    cg_FrontColor = vec4(float(_TMP15._varying_colorSet0.x), float(_TMP15._varying_colorSet0.y), float(_TMP15._varying_colorSet0.z), float(_TMP15._varying_colorSet0.w));
+    return;
+} 

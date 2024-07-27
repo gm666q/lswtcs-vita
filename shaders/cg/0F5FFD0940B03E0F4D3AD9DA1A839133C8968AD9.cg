@@ -1,0 +1,83 @@
+// profile sce_fp_psp2
+
+#define cg_FragColor gl_FragColor
+#define cg_FragData1 gl_FragColor
+#define fract(x) frac(x)
+#define inversesqrt(x) rsqrt(x)
+#define samplerCube samplerCUBE
+#define vec2 float2
+#define vec3 float3
+#define vec4 float4
+
+vec4 tex(sampler2D samp, vec2 s) { return tex2D(samp, s); }
+vec4 tex(samplerCube samp, vec3 s) { return texCUBE(samp, s); }
+
+struct VertexInput {
+    vec4 _uvSet01;
+    vec4 _colorSet0;
+    vec2 _uvSet0;
+};
+
+struct VertexOutput {
+    vec4 _varying_colorSet0;
+    vec2 _texcoord0;
+    vec2 _texcoord1;
+    float _texcoord2;
+};
+
+struct FragmentOutput {
+    vec4 _color[1];
+};
+
+static FragmentOutput _TMP8;
+static vec3 _TMP4;
+static vec4 _TMP0;
+static vec4 _TMP3;
+static vec4 _TMP1;
+static VertexOutput _input1;
+static vec4 _colorLayer00077;
+static vec3 _diffuseLight0084;
+static vec3 _lightmapCol0084;
+static vec3 _TMP710088;
+static float _falloff0089;
+static vec3 _b0091;
+static float _c0092;
+
+uniform vec4 _fog_color;
+uniform vec4 _layer0_diffuse;
+uniform vec4 _layer_kOpacities;
+uniform vec2 _alphaTestParameters;
+uniform sampler2D _layer0_sampler;
+uniform sampler2D _lightmap0;
+
+void main(
+    vec4 cg_FrontColor : COLOR,
+    vec4 cg_TexCoord1 : TEXCOORD1,
+    vec4 cg_TexCoord0 : TEXCOORD0,
+    vec4 cg_TexCoord2 : TEXCOORD2,
+
+    vec4 out gl_FragColor : COLOR
+) {
+
+
+    _input1._texcoord2 = cg_TexCoord2.x;
+    _input1._varying_colorSet0 = vec4(float(cg_FrontColor.x), float(cg_FrontColor.y), float(cg_FrontColor.z), float(cg_FrontColor.w));
+    _TMP1 = tex(_layer0_sampler, cg_TexCoord0.xy);
+    _colorLayer00077 = vec4(float(_TMP1.x), float(_TMP1.y), float(_TMP1.z), float(_TMP1.w));
+    _colorLayer00077.w = _colorLayer00077.w*_layer0_diffuse.w*_layer_kOpacities.x;
+    _colorLayer00077 = _colorLayer00077*_input1._varying_colorSet0;
+    _TMP3 = tex(_lightmap0, cg_TexCoord1.xy);
+    _lightmapCol0084 = vec3(float(_TMP3.x), float(_TMP3.y), float(_TMP3.z));
+    _diffuseLight0084 = _lightmapCol0084;
+    if (cg_TexCoord1.x <= 0.00000000E+000) {         _diffuseLight0084 = vec3( 1.00000000E+000, 1.00000000E+000, 1.00000000E+000);
+    }     _TMP710088 = _colorLayer00077.xyz*_diffuseLight0084;
+    _TMP0 = vec4(_TMP710088.x, _TMP710088.y, _TMP710088.z, _colorLayer00077.w);
+    _TMP8._color[0] = vec4(float(_TMP0.x), float(_TMP0.y), float(_TMP0.z), float(_TMP0.w));
+    _falloff0089 = float(_input1._texcoord2);
+    _b0091 = vec3(float(_TMP8._color[0].x), float(_TMP8._color[0].y), float(_TMP8._color[0].z));
+    _TMP4 = _fog_color.xyz + _falloff0089*(_b0091 - _fog_color.xyz);
+    _TMP8._color[0].xyz = vec3(float(_TMP4.x), float(_TMP4.y), float(_TMP4.z));
+    _c0092 = _TMP8._color[0].w*float(_alphaTestParameters.x) - float(_alphaTestParameters.y);
+    if (_c0092 < 0.00000000E+000) {         discard;
+    }     cg_FragColor = _TMP8._color[0];
+}

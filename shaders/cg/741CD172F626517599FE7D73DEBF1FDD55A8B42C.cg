@@ -1,0 +1,79 @@
+// profile sce_fp_psp2
+
+#define cg_FragColor gl_FragColor
+#define cg_FragData1 gl_FragColor
+#define fract(x) frac(x)
+#define inversesqrt(x) rsqrt(x)
+#define samplerCube samplerCUBE
+#define vec2 float2
+#define vec3 float3
+#define vec4 float4
+
+vec4 tex(sampler2D samp, vec2 s) { return tex2D(samp, s); }
+vec4 tex(samplerCube samp, vec3 s) { return texCUBE(samp, s); }
+
+struct VertexInput {
+    vec4 _normal;
+    vec4 _colorSet0;
+    vec2 _uvSet0;
+};
+
+struct VertexOutput {
+    vec4 _varying_colorSet0;
+    vec2 _texcoord0;
+    vec2 _texcoord1;
+    float _texcoord2;
+};
+
+struct FragmentOutput {
+    vec4 _color[1];
+};
+
+static FragmentOutput _TMP8;
+static vec3 _TMP4;
+static vec3 _TMP1;
+static vec4 _TMP3;
+static vec4 _TMP2;
+static VertexOutput _input1;
+static vec4 _colorLayer00076;
+static vec4 _result0080;
+static vec4 _envTexel0085;
+static float _falloff0088;
+static vec3 _b0090;
+
+uniform vec4 _fog_color;
+uniform vec4 _layer0_diffuse;
+uniform vec4 _layer_kOpacities;
+uniform vec4 _specular_params;
+uniform vec3 _specular_specular;
+uniform sampler2D _layer0_sampler;
+uniform sampler2D _ps2_shinemap_sampler;
+
+void main(
+    vec4 cg_FrontColor : COLOR,
+    vec4 cg_TexCoord1 : TEXCOORD1,
+    vec4 cg_TexCoord0 : TEXCOORD0,
+    vec4 cg_TexCoord2 : TEXCOORD2,
+
+    vec4 out gl_FragColor : COLOR
+) {
+
+
+    _input1._texcoord2 = cg_TexCoord2.x;
+    _input1._varying_colorSet0 = vec4(float(cg_FrontColor.x), float(cg_FrontColor.y), float(cg_FrontColor.z), float(cg_FrontColor.w));
+    _TMP2 = tex(_layer0_sampler, cg_TexCoord0.xy);
+    _colorLayer00076 = vec4(float(_TMP2.x), float(_TMP2.y), float(_TMP2.z), float(_TMP2.w));
+    _colorLayer00076.w = _colorLayer00076.w*_layer0_diffuse.w*_layer_kOpacities.x;
+    _colorLayer00076 = _colorLayer00076*_input1._varying_colorSet0;
+    _result0080 = vec4(_specular_specular.x, _specular_specular.y, _specular_specular.z, 1.00000000E+000);
+    _TMP8._color[0] = vec4(float(_colorLayer00076.x), float(_colorLayer00076.y), float(_colorLayer00076.z), float(_colorLayer00076.w));
+    _TMP3 = tex(_ps2_shinemap_sampler, cg_TexCoord1.xy);
+    _envTexel0085 = vec4(float(_TMP3.x), float(_TMP3.y), float(_TMP3.z), float(_TMP3.w));
+    _TMP1 = _envTexel0085.xyz*_specular_params.y;
+    _TMP8._color[0].xyz = _TMP8._color[0].xyz + vec3(float((_result0080.xyz*_TMP1).x), float((_result0080.xyz*_TMP1).y), float((_result0080.xyz*_TMP1).z));
+    _falloff0088 = float(_input1._texcoord2);
+    _b0090 = vec3(float(_TMP8._color[0].x), float(_TMP8._color[0].y), float(_TMP8._color[0].z));
+    _TMP4 = _fog_color.xyz + _falloff0088*(_b0090 - _fog_color.xyz);
+    _TMP8._color[0].xyz = vec3(float(_TMP4.x), float(_TMP4.y), float(_TMP4.z));
+    cg_FragColor = _TMP8._color[0];
+}

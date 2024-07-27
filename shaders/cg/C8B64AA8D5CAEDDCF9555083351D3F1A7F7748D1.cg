@@ -1,0 +1,70 @@
+// profile sce_fp_psp2
+
+#define cg_FragColor gl_FragColor
+#define cg_FragData1 gl_FragColor
+#define fract(x) frac(x)
+#define inversesqrt(x) rsqrt(x)
+#define samplerCube samplerCUBE
+#define vec2 float2
+#define vec3 float3
+#define vec4 float4
+
+vec4 tex(sampler2D samp, vec2 s) { return tex2D(samp, s); }
+vec4 tex(samplerCube samp, vec3 s) { return texCUBE(samp, s); }
+
+struct VertexInput {
+    vec4 _uvSet01;
+    vec4 _colorSet0;
+};
+
+struct VertexOutput {
+    vec4 _varying_colorSet0;
+    vec2 _texcoord0;
+    float _texcoord1;
+};
+
+struct FragmentOutput {
+    vec4 _color[1];
+};
+
+static FragmentOutput _TMP6;
+static vec3 _TMP2;
+static vec4 _TMP0;
+static vec4 _TMP1;
+static VertexOutput _input1;
+static vec4 _colorLayer00069;
+static vec3 _diffuseLight0070;
+static vec3 _lightmapCol0070;
+static vec3 _TMP630074;
+static float _falloff0075;
+static vec3 _b0077;
+
+uniform vec4 _fog_color;
+uniform vec4 _layer_kOpacities;
+uniform sampler2D _lightmap0;
+
+void main(
+    vec4 cg_FrontColor : COLOR,
+    vec4 cg_TexCoord1 : TEXCOORD1,
+    vec4 cg_TexCoord0 : TEXCOORD0,
+
+    vec4 out gl_FragColor : COLOR
+) {
+
+
+    _input1._texcoord1 = cg_TexCoord1.x;
+    _input1._varying_colorSet0 = vec4(float(cg_FrontColor.x), float(cg_FrontColor.y), float(cg_FrontColor.z), float(cg_FrontColor.w));
+    _colorLayer00069.w = _input1._varying_colorSet0.w*_layer_kOpacities.x;
+    _TMP1 = tex(_lightmap0, cg_TexCoord0.xy);
+    _lightmapCol0070 = vec3(float(_TMP1.x), float(_TMP1.y), float(_TMP1.z));
+    _diffuseLight0070 = _lightmapCol0070;
+    if (cg_TexCoord0.x <= 0.00000000E+000) {         _diffuseLight0070 = vec3( 1.00000000E+000, 1.00000000E+000, 1.00000000E+000);
+    }     _TMP630074 = _input1._varying_colorSet0.xyz*_diffuseLight0070;
+    _TMP0 = vec4(_TMP630074.x, _TMP630074.y, _TMP630074.z, _colorLayer00069.w);
+    _TMP6._color[0] = vec4(float(_TMP0.x), float(_TMP0.y), float(_TMP0.z), float(_TMP0.w));
+    _falloff0075 = float(_input1._texcoord1);
+    _b0077 = vec3(float(_TMP6._color[0].x), float(_TMP6._color[0].y), float(_TMP6._color[0].z));
+    _TMP2 = _fog_color.xyz + _falloff0075*(_b0077 - _fog_color.xyz);
+    _TMP6._color[0].xyz = vec3(float(_TMP2.x), float(_TMP2.y), float(_TMP2.z));
+    cg_FragColor = _TMP6._color[0];
+}

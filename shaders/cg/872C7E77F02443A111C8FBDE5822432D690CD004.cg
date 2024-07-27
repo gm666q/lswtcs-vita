@@ -1,0 +1,83 @@
+// profile sce_fp_psp2
+
+#define cg_FragColor gl_FragColor
+#define cg_FragData1 gl_FragColor
+#define fract(x) frac(x)
+#define inversesqrt(x) rsqrt(x)
+#define samplerCube samplerCUBE
+#define vec2 float2
+#define vec3 float3
+#define vec4 float4
+
+vec4 tex(sampler2D samp, vec2 s) { return tex2D(samp, s); }
+vec4 tex(samplerCube samp, vec3 s) { return texCUBE(samp, s); }
+
+struct VertexInput {
+    vec4 _uvSet01;
+    vec4 _colorSet0;
+    vec4 _colorSet1;
+};
+
+struct VertexOutput {
+    vec4 _varying_colorSet0;
+    vec4 _varying_colorSet1;
+    vec2 _texcoord0;
+    vec2 _texcoord1;
+    float _texcoord2;
+};
+
+struct FragmentOutput {
+    vec4 _color[1];
+};
+
+static FragmentOutput _TMP7;
+static vec3 _TMP3;
+static vec4 _TMP2;
+static vec4 _TMP1;
+static VertexOutput _input1;
+static vec4 _colorLayer00081;
+static vec4 _colorLayer10081;
+static vec4 _TMP86;
+static vec3 _TMP730087;
+static float _falloff0091;
+static vec3 _b0093;
+
+uniform vec4 _fog_color;
+uniform vec4 _layer0_diffuse;
+uniform vec4 _layer1_diffuse;
+uniform vec4 _layer_kOpacities;
+uniform sampler2D _layer0_sampler;
+uniform sampler2D _layer1_sampler;
+
+void main(
+    vec4 cg_FrontColor : COLOR,
+    vec4 cg_TexCoord1 : TEXCOORD1,
+    vec4 cg_FrontSecondaryColor : COLOR1,
+    vec4 cg_TexCoord0 : TEXCOORD0,
+    vec4 cg_TexCoord2 : TEXCOORD2,
+
+    vec4 out gl_FragColor : COLOR
+) {
+
+
+    _input1._texcoord2 = cg_TexCoord2.x;
+    _input1._varying_colorSet1 = vec4(float(cg_FrontSecondaryColor.x), float(cg_FrontSecondaryColor.y), float(cg_FrontSecondaryColor.z), float(cg_FrontSecondaryColor.w));
+    _input1._varying_colorSet0 = vec4(float(cg_FrontColor.x), float(cg_FrontColor.y), float(cg_FrontColor.z), float(cg_FrontColor.w));
+    _TMP1 = tex(_layer0_sampler, cg_TexCoord0.xy);
+    _colorLayer00081 = vec4(float(_TMP1.x), float(_TMP1.y), float(_TMP1.z), float(_TMP1.w));
+    _colorLayer00081.w = _colorLayer00081.w*_layer0_diffuse.w*_layer_kOpacities.x;
+    _colorLayer00081 = _colorLayer00081*_input1._varying_colorSet0;
+    _TMP2 = tex(_layer1_sampler, cg_TexCoord1.xy);
+    _colorLayer10081 = vec4(float(_TMP2.x), float(_TMP2.y), float(_TMP2.z), float(_TMP2.w));
+    _colorLayer10081.w = _colorLayer10081.w*_layer1_diffuse.w;
+    _colorLayer10081.xyz = _colorLayer10081.xyz*_input1._varying_colorSet0.xyz;
+    _colorLayer10081.w = _colorLayer10081.w*_input1._varying_colorSet1.x*_layer_kOpacities.y;
+    _TMP730087 = _colorLayer00081.xyz*(1.00000000E+000 - _colorLayer10081.w) + _colorLayer10081.xyz*_colorLayer10081.w;
+    _TMP86 = vec4(_TMP730087.x, _TMP730087.y, _TMP730087.z, 1.00000000E+000 - (1.00000000E+000 - _colorLayer00081.w)*(1.00000000E+000 - _colorLayer10081.w));
+    _TMP7._color[0] = vec4(float(_TMP86.x), float(_TMP86.y), float(_TMP86.z), float(_TMP86.w));
+    _falloff0091 = float(_input1._texcoord2);
+    _b0093 = vec3(float(_TMP7._color[0].x), float(_TMP7._color[0].y), float(_TMP7._color[0].z));
+    _TMP3 = _fog_color.xyz + _falloff0091*(_b0093 - _fog_color.xyz);
+    _TMP7._color[0].xyz = vec3(float(_TMP3.x), float(_TMP3.y), float(_TMP3.z));
+    cg_FragColor = _TMP7._color[0];
+}

@@ -1,0 +1,73 @@
+// profile sce_vp_psp2
+
+#define fract(x) frac(x)
+#define inversesqrt(x) rsqrt(x)
+#define vec2 float2
+#define vec3 float3
+#define vec4 float4
+
+struct VS_IN {
+    vec4 _pos;
+    vec4 _color;
+    vec2 _texcoord;
+};
+
+struct VS_OUT {
+    vec4 _pos1;
+    vec4 _color1;
+    vec4 _texcoord1;
+    vec3 _fog;
+};
+
+static vec4 _r0010;
+static vec3 _a0012;
+static float _TMP13;
+static float _x0014;
+static vec4 _r0018;
+
+uniform vec4 _viewProj[4];
+uniform vec4 _view[4];
+uniform vec4 _fog_params;
+
+void main(
+    vec4 COLOR,
+    vec4 TEXCOORD0,
+    vec4 cg_Vertex,
+
+    vec4 out cg_FrontColor : COLOR,
+    vec4 out cg_TexCoord1 : TEXCOORD1,
+    vec4 out cg_TexCoord0 : TEXCOORD0,
+
+    vec4 out gl_Position : POSITION,
+    float out gl_PointSize : PSIZE
+) {
+
+    VS_OUT _OUT;
+    float _fVertexToEyeDistance;
+    float _dd;
+
+    _r0010 = cg_Vertex.x*_view[0];
+    _r0010 = _r0010 + cg_Vertex.y*_view[1];
+    _r0010 = _r0010 + cg_Vertex.z*_view[2];
+    _r0010 = _r0010 + cg_Vertex.w*_view[3];
+    _a0012 = _r0010.xyz/_r0010.w;
+    _fVertexToEyeDistance = length(_a0012);
+    _dd = _fVertexToEyeDistance*_fog_params.w;
+    _x0014 = _dd*_dd;
+    _TMP13 = pow(2.71828198E+000, _x0014);
+    _OUT._fog.x = 1.00000000E+000/_TMP13;
+    _OUT._fog.y = 0.00000000E+000;
+    _OUT._fog.z = 0.00000000E+000;
+    _r0018 = cg_Vertex.x*_viewProj[0];
+    _r0018 = _r0018 + cg_Vertex.y*_viewProj[1];
+    _r0018 = _r0018 + cg_Vertex.z*_viewProj[2];
+    _r0018 = _r0018 + cg_Vertex.w*_viewProj[3];
+    _OUT._texcoord1.xy = TEXCOORD0.xy;
+    _OUT._texcoord1.zw = vec2( 0.00000000E+000, 0.00000000E+000);
+    cg_TexCoord0 = _OUT._texcoord1;
+    cg_TexCoord1.xyz = _OUT._fog;
+    gl_Position = _r0018;
+    cg_FrontColor = COLOR;
+
+    gl_PointSize = 1.0f;
+}

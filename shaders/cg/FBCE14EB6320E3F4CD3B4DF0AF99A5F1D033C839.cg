@@ -1,0 +1,231 @@
+// profile sce_vp_psp2
+
+#define fract(x) frac(x)
+#define inversesqrt(x) rsqrt(x)
+#define vec2 float2
+#define vec3 float3
+#define vec4 float4
+
+struct VertexInput {
+    vec4 _position;
+    vec4 _normal;
+    vec4 _colorSet0;
+    vec4 _blendWeight0;
+    vec4 _blendIndices0;
+    vec2 _uvSet0;
+};
+
+struct VertexOutput {
+    vec4 _varying_position;
+    vec4 _varying_colorSet0;
+    vec4 _texcoord0;
+    vec2 _texcoord1;
+    float _texcoord2;
+};
+
+struct FragmentOutput {
+    vec4 _color[1];
+};
+
+static VertexOutput _TMP15;
+static float _TMP2;
+static float _TMP6;
+static float _TMP1;
+static float _TMP0;
+static vec4 _TMP8;
+static vec2 _TMP21;
+static vec3 _TMP20;
+static vec4 _TMP18;
+static vec4 _TMP17[4];
+static vec4 _TMP5;
+static float _TMP10;
+static float _TMP9;
+static float _TMP12;
+static float _TMP11;
+static vec4 _C0090[4];
+static vec3 _normal0092;
+static vec3 _v0094;
+static vec3 _r0096;
+static vec3 _M0096[3];
+static vec3 _r0098;
+static vec3 _M0098[3];
+static vec3 _v0100;
+static vec3 _v0106;
+static vec3 _TMP840106[3];
+static vec3 _r0108;
+static vec4 _skinMatrix00113[4];
+static vec4 _skinMatrix10113[4];
+static vec4 _r0115;
+static vec4 _r0117;
+static vec4 _r0121;
+static vec4 _r0123;
+static vec4 _r0129;
+static vec4 _M0129[4];
+static vec4 _v0134;
+static vec4 _b0136;
+static float _b0140;
+static float _a0142;
+static vec3 _TMP143;
+static vec3 _TMP144;
+static vec3 _TMP145;
+static vec3 _TMP146;
+static vec3 _TMP147;
+static vec3 _TMP148;
+static vec3 _TMP149;
+static vec3 _TMP150;
+static vec3 _TMP151;
+static vec3 _TMP152;
+static vec3 _TMP153;
+static vec3 _TMP154;
+static vec3 _TMP155;
+static vec3 _TMP156;
+static vec3 _TMP157;
+
+uniform vec4 _viewProj[4];
+uniform vec4 _vs_view[4];
+uniform vec4 _world[4];
+uniform vec4 _skinMatrix[36];
+uniform vec4 _kTint;
+uniform vec4 _fog_params;
+uniform vec2 _uvOffset0;
+
+void main(
+    vec4 NORMAL,
+    vec4 COLOR,
+    vec4 BLENDWEIGHT0,
+    vec4 BLENDINDICES0,
+    vec4 TEXCOORD0,
+    vec4 cg_Vertex,
+
+    vec4 out cg_FrontColor : COLOR,
+    vec4 out cg_TexCoord1 : TEXCOORD1,
+    vec4 out cg_TexCoord0 : TEXCOORD0,
+    vec4 out cg_TexCoord2 : TEXCOORD2,
+
+    vec4 out gl_Position : POSITION,
+    float out gl_PointSize : PSIZE
+) {
+
+    float _dist;
+    float _dd;
+
+    _C0090[0] = _world[0].x*_vs_view[0] + _world[0].y*_vs_view[1] + _world[0].z*_vs_view[2] + _world[0].w*_vs_view[3];
+    _C0090[1] = _world[1].x*_vs_view[0] + _world[1].y*_vs_view[1] + _world[1].z*_vs_view[2] + _world[1].w*_vs_view[3];
+    _C0090[2] = _world[2].x*_vs_view[0] + _world[2].y*_vs_view[1] + _world[2].z*_vs_view[2] + _world[2].w*_vs_view[3];
+    _C0090[3] = _world[3].x*_vs_view[0] + _world[3].y*_vs_view[1] + _world[3].z*_vs_view[2] + _world[3].w*_vs_view[3];
+    _TMP17[0] = vec4(float(_C0090[0].x), float(_C0090[0].y), float(_C0090[0].z), float(_C0090[0].w));
+    _TMP17[1] = vec4(float(_C0090[1].x), float(_C0090[1].y), float(_C0090[1].z), float(_C0090[1].w));
+    _TMP17[2] = vec4(float(_C0090[2].x), float(_C0090[2].y), float(_C0090[2].z), float(_C0090[2].w));
+    _TMP17[3] = vec4(float(_C0090[3].x), float(_C0090[3].y), float(_C0090[3].z), float(_C0090[3].w));
+    _normal0092 = NORMAL.xyz*2.00000000E+000 - 1.00000000E+000;
+    _TMP143.x = _skinMatrix[(4*int(BLENDINDICES0.x) + 0)].x;
+    _TMP143.y = _skinMatrix[(4*int(BLENDINDICES0.x) + 0)].y;
+    _TMP143.z = _skinMatrix[(4*int(BLENDINDICES0.x) + 0)].z;
+    _TMP144.x = _skinMatrix[(4*int(BLENDINDICES0.x) + 1)].x;
+    _TMP144.y = _skinMatrix[(4*int(BLENDINDICES0.x) + 1)].y;
+    _TMP144.z = _skinMatrix[(4*int(BLENDINDICES0.x) + 1)].z;
+    _TMP145.x = _skinMatrix[(4*int(BLENDINDICES0.x) + 2)].x;
+    _TMP145.y = _skinMatrix[(4*int(BLENDINDICES0.x) + 2)].y;
+    _TMP145.z = _skinMatrix[(4*int(BLENDINDICES0.x) + 2)].z;
+    _M0096[0] = vec3(float(_TMP143.x), float(_TMP143.y), float(_TMP143.z));
+    _M0096[1] = vec3(float(_TMP144.x), float(_TMP144.y), float(_TMP144.z));
+    _M0096[2] = vec3(float(_TMP145.x), float(_TMP145.y), float(_TMP145.z));
+    _r0096 = _normal0092.x*_M0096[0];
+    _r0096 = _r0096 + _normal0092.y*_M0096[1];
+    _r0096 = _r0096 + _normal0092.z*_M0096[2];
+    _TMP146.x = _skinMatrix[(4*int(BLENDINDICES0.y) + 0)].x;
+    _TMP146.y = _skinMatrix[(4*int(BLENDINDICES0.y) + 0)].y;
+    _TMP146.z = _skinMatrix[(4*int(BLENDINDICES0.y) + 0)].z;
+    _TMP147.x = _skinMatrix[(4*int(BLENDINDICES0.y) + 1)].x;
+    _TMP147.y = _skinMatrix[(4*int(BLENDINDICES0.y) + 1)].y;
+    _TMP147.z = _skinMatrix[(4*int(BLENDINDICES0.y) + 1)].z;
+    _TMP148.x = _skinMatrix[(4*int(BLENDINDICES0.y) + 2)].x;
+    _TMP148.y = _skinMatrix[(4*int(BLENDINDICES0.y) + 2)].y;
+    _TMP148.z = _skinMatrix[(4*int(BLENDINDICES0.y) + 2)].z;
+    _M0098[0] = vec3(float(_TMP146.x), float(_TMP146.y), float(_TMP146.z));
+    _M0098[1] = vec3(float(_TMP147.x), float(_TMP147.y), float(_TMP147.z));
+    _M0098[2] = vec3(float(_TMP148.x), float(_TMP148.y), float(_TMP148.z));
+    _r0098 = _normal0092.x*_M0098[0];
+    _r0098 = _r0098 + _normal0092.y*_M0098[1];
+    _r0098 = _r0098 + _normal0092.z*_M0098[2];
+    _v0100 = _r0096*BLENDWEIGHT0.x + _r0098*(1.00000000E+000 - BLENDWEIGHT0.x);
+    _TMP11 = dot(vec3(float(_v0100.x), float(_v0100.y), float(_v0100.z)), vec3(float(_v0100.x), float(_v0100.y), float(_v0100.z)));
+    _TMP9 = float(_TMP11);
+    _TMP12 = inversesqrt(float(_TMP9));
+    _TMP10 = float(_TMP12);
+    _v0094 = _TMP10*_v0100;
+    _v0106 = vec3(float(_v0094.x), float(_v0094.y), float(_v0094.z));
+    _TMP149.x = _TMP17[0].x;
+    _TMP150.y = _TMP17[0].y;
+    _TMP151.z = _TMP17[0].z;
+    _TMP840106[0] = vec3(float(_TMP149.x), float(_TMP150.y), float(_TMP151.z));
+    _TMP152.x = _TMP17[1].x;
+    _TMP153.y = _TMP17[1].y;
+    _TMP154.z = _TMP17[1].z;
+    _TMP840106[1] = vec3(float(_TMP152.x), float(_TMP153.y), float(_TMP154.z));
+    _TMP155.x = _TMP17[2].x;
+    _TMP156.y = _TMP17[2].y;
+    _TMP157.z = _TMP17[2].z;
+    _TMP840106[2] = vec3(float(_TMP155.x), float(_TMP156.y), float(_TMP157.z));
+    _r0108 = _v0106.x*_TMP840106[0];
+    _r0108 = _r0108 + _v0106.y*_TMP840106[1];
+    _r0108 = _r0108 + _v0106.z*_TMP840106[2];
+    _TMP20 = vec3(float(_r0108.x), float(_r0108.y), float(_r0108.z));
+    _TMP21 = TEXCOORD0.xy + _uvOffset0;
+    _skinMatrix00113[0] = _skinMatrix[(4*int(BLENDINDICES0.x) + 0)];
+    _skinMatrix00113[1] = _skinMatrix[(4*int(BLENDINDICES0.x) + 1)];
+    _skinMatrix00113[2] = _skinMatrix[(4*int(BLENDINDICES0.x) + 2)];
+    _skinMatrix00113[3] = _skinMatrix[(4*int(BLENDINDICES0.x) + 3)];
+    _skinMatrix10113[0] = _skinMatrix[(4*int(BLENDINDICES0.y) + 0)];
+    _skinMatrix10113[1] = _skinMatrix[(4*int(BLENDINDICES0.y) + 1)];
+    _skinMatrix10113[2] = _skinMatrix[(4*int(BLENDINDICES0.y) + 2)];
+    _skinMatrix10113[3] = _skinMatrix[(4*int(BLENDINDICES0.y) + 3)];
+    _r0115 = cg_Vertex.x*_skinMatrix00113[0];
+    _r0115 = _r0115 + cg_Vertex.y*_skinMatrix00113[1];
+    _r0115 = _r0115 + cg_Vertex.z*_skinMatrix00113[2];
+    _r0115 = _r0115 + cg_Vertex.w*_skinMatrix00113[3];
+    _r0117 = cg_Vertex.x*_skinMatrix10113[0];
+    _r0117 = _r0117 + cg_Vertex.y*_skinMatrix10113[1];
+    _r0117 = _r0117 + cg_Vertex.z*_skinMatrix10113[2];
+    _r0117 = _r0117 + cg_Vertex.w*_skinMatrix10113[3];
+    _TMP5 = vec4(float((_r0115*float(BLENDWEIGHT0.x) + _r0117*float(BLENDWEIGHT0.y)).x), float((_r0115*float(BLENDWEIGHT0.x) + _r0117*float(BLENDWEIGHT0.y)).y), float((_r0115*float(BLENDWEIGHT0.x) + _r0117*float(BLENDWEIGHT0.y)).z), float((_r0115*float(BLENDWEIGHT0.x) + _r0117*float(BLENDWEIGHT0.y)).w));
+    _TMP18 = vec4(float(_TMP5.x), float(_TMP5.y), float(_TMP5.z), float(_TMP5.w));
+    _r0121 = _TMP18.x*_world[0];
+    _r0121 = _r0121 + _TMP18.y*_world[1];
+    _r0121 = _r0121 + _TMP18.z*_world[2];
+    _r0121 = _r0121 + _TMP18.w*_world[3];
+    _r0123 = _r0121.x*_viewProj[0];
+    _r0123 = _r0123 + _r0121.y*_viewProj[1];
+    _r0123 = _r0123 + _r0121.z*_viewProj[2];
+    _r0123 = _r0123 + _r0121.w*_viewProj[3];
+    _M0129[0] = vec4(float(_TMP17[0].x), float(_TMP17[0].y), float(_TMP17[0].z), float(_TMP17[0].w));
+    _M0129[1] = vec4(float(_TMP17[1].x), float(_TMP17[1].y), float(_TMP17[1].z), float(_TMP17[1].w));
+    _M0129[2] = vec4(float(_TMP17[2].x), float(_TMP17[2].y), float(_TMP17[2].z), float(_TMP17[2].w));
+    _M0129[3] = vec4(float(_TMP17[3].x), float(_TMP17[3].y), float(_TMP17[3].z), float(_TMP17[3].w));
+    _r0129 = _TMP18.x*_M0129[0];
+    _r0129 = _r0129 + _TMP18.y*_M0129[1];
+    _r0129 = _r0129 + _TMP18.z*_M0129[2];
+    _r0129 = _r0129 + _TMP18.w*_M0129[3];
+    _TMP15._texcoord0.xyzw = vec4(float(_TMP20.x), float(_TMP20.y), float(_TMP20.z), 1.00000000E+000);
+    _TMP15._texcoord1.xy = vec2(float(_TMP21.x), float(_TMP21.y));
+    _v0134 = vec4(float(float(((COLOR*_kTint)*2.00000000E+000).x)), float(float(((COLOR*_kTint)*2.00000000E+000).y)), float(float(((COLOR*_kTint)*2.00000000E+000).z)), float(float(((COLOR*_kTint)*2.00000000E+000).w)));
+    _b0136 = vec4(float(_v0134.x), float(_v0134.y), float(_v0134.z), float(_v0134.w));
+    _TMP8 = (_b0136);
+    _TMP15._varying_colorSet0 = vec4(float(_TMP8.x), float(_TMP8.y), float(_TMP8.z), float(_TMP8.w));
+    _TMP0 = length(_r0129.xyz);
+    _b0140 = _TMP0 - float(_fog_params.x);
+    _TMP1 = max(0.00000000E+000, _b0140);
+    _dist = float(_TMP1);
+    _a0142 = _dist/_fog_params.z;
+    _TMP6 = min(float(_a0142), 1.00000000E+000);
+    _TMP2 = float(_TMP6);
+    _dd = float((1.00000000E+000 - float(_TMP2)));
+    _TMP15._texcoord2 = float(_dd);
+    cg_TexCoord2.x = _TMP15._texcoord2;
+    cg_TexCoord0 = _TMP15._texcoord0;
+    cg_TexCoord1.xy = _TMP15._texcoord1;
+    gl_Position = _r0123;
+    cg_FrontColor = vec4(float(_TMP15._varying_colorSet0.x), float(_TMP15._varying_colorSet0.y), float(_TMP15._varying_colorSet0.z), float(_TMP15._varying_colorSet0.w));
+
+    gl_PointSize = 1.0f;
+}

@@ -1,0 +1,44 @@
+// profile sce_fp_psp2
+
+#define cg_FragColor gl_FragColor
+#define cg_FragData1 gl_FragColor
+#define fract(x) frac(x)
+#define inversesqrt(x) rsqrt(x)
+#define samplerCube samplerCUBE
+#define vec2 float2
+#define vec3 float3
+#define vec4 float4
+
+vec4 tex(sampler2D samp, vec2 s) { return tex2D(samp, s); }
+vec4 tex(samplerCube samp, vec3 s) { return texCUBE(samp, s); }
+
+struct PS_IN {
+    vec2 _Texture;
+};
+
+struct VS_IN {
+    int dummy;
+};
+
+struct VS_OUTTHRESHOLD {
+    vec4 _Texture1;
+};
+
+struct PS_INTHRESHOLD {
+    vec4 _Texture2;
+};
+
+static vec4 _ret_0;
+
+uniform sampler2D _diffuse_tex;
+
+void main(
+    vec4 cg_TexCoord0 : TEXCOORD0,
+
+    vec4 out gl_FragColor : COLOR
+) {
+
+
+    _ret_0 = tex(_diffuse_tex, cg_TexCoord0.xy);
+    cg_FragColor = _ret_0;
+}

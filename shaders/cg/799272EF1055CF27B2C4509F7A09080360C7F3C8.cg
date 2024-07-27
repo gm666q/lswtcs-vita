@@ -1,0 +1,176 @@
+// profile sce_fp_psp2
+
+#define cg_FragColor gl_FragColor
+#define cg_FragData1 gl_FragColor
+#define fract(x) frac(x)
+#define inversesqrt(x) rsqrt(x)
+#define samplerCube samplerCUBE
+#define vec2 float2
+#define vec3 float3
+#define vec4 float4
+
+vec4 tex(sampler2D samp, vec2 s) { return tex2D(samp, s); }
+vec4 tex(samplerCube samp, vec3 s) { return texCUBE(samp, s); }
+
+struct VertexInput {
+    vec4 _normal;
+    vec4 _uvSet01;
+    vec4 _colorSet0;
+    vec2 _uvSet0;
+};
+
+struct VertexOutput {
+    vec4 _varying_colorSet0;
+    vec4 _texcoord0;
+    vec3 _texcoord1;
+    vec2 _texcoord2;
+    vec2 _texcoord3;
+    float _texcoord4;
+};
+
+struct FragmentOutput {
+    vec4 _color[1];
+};
+
+static FragmentOutput _TMP20;
+static vec3 _TMP12;
+static vec3 _TMP1;
+static float _TMP11;
+static vec4 _TMP10;
+static vec3 _TMP29;
+static vec4 _TMP0;
+static vec4 _TMP9;
+static vec4 _TMP8;
+static vec4 _TMP7;
+static vec4 _TMP6;
+static vec4 _TMP5;
+static vec3 _TMP28;
+static vec3 _TMP30;
+static float _TMP15;
+static float _TMP16;
+static vec3 _TMP3;
+static float _TMP14;
+static float _TMP13;
+static vec3 _TMP2;
+static VertexOutput _input1;
+static vec3 _v0103;
+static vec3 _reflection0125;
+static vec3 _r0131;
+static vec3 _v0131;
+static vec4 _colorLayer00139;
+static vec4 _colorLayer10139;
+static vec4 _colorLayer20139;
+static vec4 _TMP144;
+static vec3 _TMP950145;
+static vec4 _TMP148;
+static vec3 _TMP970149;
+static vec4 _result0151;
+static vec3 _diffuseLight0154;
+static vec3 _lightmapCol0154;
+static vec3 _TMP940158;
+static vec4 _envTexel0160;
+static vec3 _finalLightingFactor0160;
+static vec3 _c0162;
+static float _a0164;
+static float _falloff0165;
+static vec3 _b0167;
+static vec3 _TMP168;
+static vec3 _TMP169;
+static vec3 _TMP170;
+
+uniform vec4 _vs_view[4];
+uniform vec4 _fog_color;
+uniform vec4 _layer0_diffuse;
+uniform vec4 _layer1_diffuse;
+uniform vec4 _layer2_diffuse;
+uniform vec4 _layer_kOpacities;
+uniform vec4 _envmap_params;
+uniform sampler2D _layer0_sampler;
+uniform sampler2D _layer1_sampler;
+uniform sampler2D _layer2_sampler;
+uniform sampler2D _specular_sampler;
+uniform samplerCube _envmap_samplerCube;
+uniform sampler2D _lightmap0;
+
+void main(
+    vec4 cg_FrontColor : COLOR,
+    vec4 cg_TexCoord4 : TEXCOORD4,
+    vec4 cg_TexCoord1 : TEXCOORD1,
+    vec4 cg_TexCoord3 : TEXCOORD3,
+    vec4 cg_TexCoord0 : TEXCOORD0,
+    vec4 cg_TexCoord2 : TEXCOORD2,
+
+    vec4 out gl_FragColor : COLOR
+) {
+
+
+    _input1._texcoord4 = cg_TexCoord4.x;
+    _input1._varying_colorSet0 = vec4(float(cg_FrontColor.x), float(cg_FrontColor.y), float(cg_FrontColor.z), float(cg_FrontColor.w));
+    _v0103 = -cg_TexCoord1.xyz;
+    _TMP13 = dot(_v0103, _v0103);
+    _TMP14 = inversesqrt(_TMP13);
+    _TMP2 = _TMP14*_v0103;
+    _TMP30 = vec3(float(_TMP2.x), float(_TMP2.y), float(_TMP2.z));
+    _TMP13 = dot(cg_TexCoord0.xyz, cg_TexCoord0.xyz);
+    _TMP14 = inversesqrt(_TMP13);
+    _TMP3 = _TMP14*cg_TexCoord0.xyz;
+    _TMP28 = vec3(float(_TMP3.x), float(_TMP3.y), float(_TMP3.z));
+    _TMP16 = dot(vec3(float(_TMP28.x), float(_TMP28.y), float(_TMP28.z)), vec3(float(_TMP30.x), float(_TMP30.y), float(_TMP30.z)));
+    _TMP15 = float(_TMP16);
+    _reflection0125 = _TMP30 - (2.00000000E+000*_TMP28)*_TMP15;
+    _v0131 = vec3(float(_reflection0125.x), float(_reflection0125.y), float(_reflection0125.z));
+    _TMP168.x = _vs_view[0].x;
+    _TMP168.y = _vs_view[0].y;
+    _TMP168.z = _vs_view[0].z;
+    _r0131.x = dot(_TMP168, _v0131);
+    _TMP169.x = _vs_view[1].x;
+    _TMP169.y = _vs_view[1].y;
+    _TMP169.z = _vs_view[1].z;
+    _r0131.y = dot(_TMP169, _v0131);
+    _TMP170.x = _vs_view[2].x;
+    _TMP170.y = _vs_view[2].y;
+    _TMP170.z = _vs_view[2].z;
+    _r0131.z = dot(_TMP170, _v0131);
+    _TMP29 = vec3(float((-_r0131).x), float((-_r0131).y), float((-_r0131).z));
+    _TMP5 = tex(_layer0_sampler, cg_TexCoord2.xy);
+    _colorLayer00139 = vec4(float(_TMP5.x), float(_TMP5.y), float(_TMP5.z), float(_TMP5.w));
+    _colorLayer00139.w = _colorLayer00139.w*_layer0_diffuse.w*_layer_kOpacities.x;
+    _colorLayer00139 = _colorLayer00139*_input1._varying_colorSet0;
+    _TMP6 = tex(_layer1_sampler, cg_TexCoord2.xy);
+    _colorLayer10139 = vec4(float(_TMP6.x), float(_TMP6.y), float(_TMP6.z), float(_TMP6.w));
+    _colorLayer10139.w = _colorLayer10139.w*_layer1_diffuse.w;
+    _colorLayer10139.xyz = _colorLayer10139.xyz*_input1._varying_colorSet0.xyz;
+    _colorLayer10139.w = _colorLayer10139.w*_layer_kOpacities.y;
+    _TMP950145 = _colorLayer00139.xyz*(_colorLayer10139.xyz*_colorLayer10139.w + vec3(1.00000000E+000 - _colorLayer10139.w, 1.00000000E+000 - _colorLayer10139.w, 1.00000000E+000 - _colorLayer10139.w));
+    _TMP144 = vec4(_TMP950145.x, _TMP950145.y, _TMP950145.z, _colorLayer00139.w);
+    _TMP7 = tex(_layer2_sampler, cg_TexCoord2.xy);
+    _colorLayer20139 = vec4(float(_TMP7.x), float(_TMP7.y), float(_TMP7.z), float(_TMP7.w));
+    _colorLayer20139.w = _colorLayer20139.w*_layer2_diffuse.w;
+    _colorLayer20139.xyz = _colorLayer20139.xyz*_input1._varying_colorSet0.xyz;
+    _colorLayer20139.w = _colorLayer20139.w*_layer_kOpacities.z;
+    _TMP970149 = _TMP144.xyz + _colorLayer20139.xyz*_colorLayer20139.w;
+    _TMP148 = vec4(_TMP970149.x, _TMP970149.y, _TMP970149.z, _TMP144.w);
+    _TMP8 = tex(_specular_sampler, cg_TexCoord2.xy);
+    _result0151 = vec4(float(_TMP8.x), float(_TMP8.y), float(_TMP8.z), float(_TMP8.w));
+    _TMP9 = tex(_lightmap0, cg_TexCoord3.xy);
+    _lightmapCol0154 = vec3(float(_TMP9.x), float(_TMP9.y), float(_TMP9.z));
+    _diffuseLight0154 = _lightmapCol0154;
+    if (cg_TexCoord3.x <= 0.00000000E+000) {         _diffuseLight0154 = vec3( 1.00000000E+000, 1.00000000E+000, 1.00000000E+000);
+    }     _TMP940158 = _TMP148.xyz*_diffuseLight0154;
+    _TMP0 = vec4(_TMP940158.x, _TMP940158.y, _TMP940158.z, _TMP148.w);
+    _TMP20._color[0] = vec4(float(_TMP0.x), float(_TMP0.y), float(_TMP0.z), float(_TMP0.w));
+    _c0162 = vec3(float(_TMP29.x), float(_TMP29.y), float(_TMP29.z));
+    _TMP10 = tex(_envmap_samplerCube, _c0162);
+    _envTexel0160 = vec4(float(_TMP10.x), float(_TMP10.y), float(_TMP10.z), float(_TMP10.w));
+    _finalLightingFactor0160 = (1.00000000E+000 - _envmap_params.x) + _diffuseLight0154*_envmap_params.x;
+    _a0164 = _envTexel0160.w*_envmap_params.z;
+    _TMP11 = _a0164 + (1.00000000E+000 - _a0164);
+    _envTexel0160 = _envTexel0160*_TMP11;
+    _TMP1 = (_envmap_params.y*_envTexel0160.xyz)*_finalLightingFactor0160;
+    _TMP20._color[0].xyz = _TMP20._color[0].xyz + vec3(float((_result0151.xyz*_TMP1).x), float((_result0151.xyz*_TMP1).y), float((_result0151.xyz*_TMP1).z));
+    _falloff0165 = float(_input1._texcoord4);
+    _b0167 = vec3(float(_TMP20._color[0].x), float(_TMP20._color[0].y), float(_TMP20._color[0].z));
+    _TMP12 = _fog_color.xyz + _falloff0165*(_b0167 - _fog_color.xyz);
+    _TMP20._color[0].xyz = vec3(float(_TMP12.x), float(_TMP12.y), float(_TMP12.z));
+    cg_FragColor = _TMP20._color[0];
+}

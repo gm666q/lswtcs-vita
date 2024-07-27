@@ -1,0 +1,54 @@
+// profile sce_vp_psp2
+
+#define fract(x) frac(x)
+#define inversesqrt(x) rsqrt(x)
+#define vec2 float2
+#define vec3 float3
+#define vec4 float4
+
+struct VS_IN {
+    vec4 _ObjPos;
+};
+
+struct VS_OUT {
+    vec4 _position;
+    vec2 _Texture;
+};
+
+struct VS_OUT2 {
+    vec4 _position1;
+};
+
+struct VS_IN3 {
+    vec4 _ObjPos1;
+    vec4 _color;
+};
+
+struct VS_OUT3 {
+    vec4 _position2;
+    vec4 _color1;
+};
+
+struct PS_IN3 {
+    vec4 _color2;
+};
+
+
+
+void main(
+    vec4 cg_Vertex,
+
+    vec4 out cg_TexCoord0 : TEXCOORD0,
+
+    vec4 out gl_Position : POSITION,
+    float out gl_PointSize : PSIZE
+) {
+
+    VS_OUT _Out;
+
+    _Out._Texture = cg_Vertex.xy*5.00000000E-001 + 5.00000000E-001;
+    cg_TexCoord0.xy = _Out._Texture;
+    gl_Position = cg_Vertex;
+
+    gl_PointSize = 1.0f;
+}

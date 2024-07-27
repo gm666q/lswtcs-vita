@@ -1,0 +1,58 @@
+// profile sce_vp_psp2
+
+#define fract(x) frac(x)
+#define inversesqrt(x) rsqrt(x)
+#define vec2 float2
+#define vec3 float3
+#define vec4 float4
+
+struct VertexInput {
+    vec4 _position;
+    vec4 _colorSet0;
+    vec2 _uvSet0;
+};
+
+struct VertexOutput {
+    vec4 _varying_position;
+    vec4 _varying_colorSet0;
+    vec2 _texcoord0;
+};
+
+struct FragmentOutput {
+    vec4 _color[1];
+};
+
+static VertexOutput _TMP3;
+static vec4 _TMP0;
+static vec2 _TMP5;
+static vec4 _v0065;
+static vec4 _b0067;
+
+uniform vec4 _kTint;
+uniform vec2 _uvOffset0;
+
+void main(
+    vec4 COLOR,
+    vec4 TEXCOORD0,
+    vec4 cg_Vertex,
+
+    vec4 out cg_FrontColor : COLOR,
+    vec4 out cg_TexCoord0 : TEXCOORD0,
+
+    vec4 out gl_Position : POSITION,
+    float out gl_PointSize : PSIZE
+) {
+
+
+    _TMP5 = TEXCOORD0.xy + _uvOffset0;
+    _TMP3._texcoord0.xy = vec2(float(_TMP5.x), float(_TMP5.y));
+    _v0065 = vec4(float(float(((COLOR*_kTint)*2.00000000E+000).x)), float(float(((COLOR*_kTint)*2.00000000E+000).y)), float(float(((COLOR*_kTint)*2.00000000E+000).z)), float(float(((COLOR*_kTint)*2.00000000E+000).w)));
+    _b0067 = vec4(float(_v0065.x), float(_v0065.y), float(_v0065.z), float(_v0065.w));
+    _TMP0 = (_b0067);
+    _TMP3._varying_colorSet0 = vec4(float(_TMP0.x), float(_TMP0.y), float(_TMP0.z), float(_TMP0.w));
+    cg_TexCoord0.xy = _TMP3._texcoord0;
+    gl_Position = cg_Vertex;
+    cg_FrontColor = vec4(float(_TMP3._varying_colorSet0.x), float(_TMP3._varying_colorSet0.y), float(_TMP3._varying_colorSet0.z), float(_TMP3._varying_colorSet0.w));
+
+    gl_PointSize = 1.0f;
+}

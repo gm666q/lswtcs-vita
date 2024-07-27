@@ -1,0 +1,102 @@
+// profile sce_fp_psp2
+
+#define cg_FragColor gl_FragColor
+#define cg_FragData1 gl_FragColor
+#define fract(x) frac(x)
+#define inversesqrt(x) rsqrt(x)
+#define samplerCube samplerCUBE
+#define vec2 float2
+#define vec3 float3
+#define vec4 float4
+
+vec4 tex(sampler2D samp, vec2 s) { return tex2D(samp, s); }
+vec4 tex(samplerCube samp, vec3 s) { return texCUBE(samp, s); }
+
+struct VertexInput {
+    vec4 _normal;
+    vec4 _colorSet0;
+};
+
+struct VertexOutput {
+    vec4 _varying_colorSet0;
+    vec4 _texcoord0;
+    float _texcoord1;
+};
+
+struct FragmentOutput {
+    vec4 _color[1];
+};
+
+static FragmentOutput _TMP14;
+static vec3 _TMP6;
+static vec4 _TMP0;
+static float _TMP24;
+static float _TMP23;
+static float _TMP5;
+static float _TMP4;
+static float _TMP10;
+static vec3 _TMP22;
+static float _TMP9;
+static float _TMP3;
+static float _TMP2;
+static vec3 _TMP1;
+static float _TMP8;
+static float _TMP7;
+static VertexOutput _input1;
+static vec4 _colorLayer00095;
+static vec3 _diffuseLight0108;
+static vec3 _TMP770112;
+static float _falloff0113;
+static vec3 _b0115;
+
+uniform vec4 _vs_sceneAmbientColor;
+uniform vec4 _vs_lightColor0;
+uniform vec4 _vs_lightColor1;
+uniform vec4 _vs_lightPosition0;
+uniform vec4 _vs_lightPosition1;
+uniform vec4 _fog_color;
+uniform vec4 _layer0_diffuse;
+uniform vec4 _layer_kOpacities;
+uniform vec4 _ambientColor;
+uniform vec4 _incandescentGlow;
+
+void main(
+    vec4 cg_FrontColor : COLOR,
+    vec4 cg_TexCoord1 : TEXCOORD1,
+    vec4 cg_TexCoord0 : TEXCOORD0,
+
+    vec4 out gl_FragColor : COLOR
+) {
+
+
+    _input1._texcoord1 = cg_TexCoord1.x;
+    _input1._varying_colorSet0 = vec4(float(cg_FrontColor.x), float(cg_FrontColor.y), float(cg_FrontColor.z), float(cg_FrontColor.w));
+    _TMP7 = dot(cg_TexCoord0.xyz, cg_TexCoord0.xyz);
+    _TMP8 = inversesqrt(_TMP7);
+    _TMP1 = _TMP8*cg_TexCoord0.xyz;
+    _TMP22 = vec3(float(_TMP1.x), float(_TMP1.y), float(_TMP1.z));
+    _colorLayer00095 = _layer0_diffuse*_input1._varying_colorSet0;
+    _colorLayer00095.w = _colorLayer00095.w*_layer_kOpacities.x;
+    _TMP9 = dot(vec3(float(_vs_lightPosition0.x), float(_vs_lightPosition0.y), float(_vs_lightPosition0.z)), vec3(float(_TMP22.x), float(_TMP22.y), float(_TMP22.z)));
+    _TMP2 = float(_TMP9);
+    _TMP10 = max(0.00000000E+000, float(_TMP2));
+    _TMP3 = float(_TMP10);
+    _TMP23 = _TMP3*_vs_lightPosition0.w;
+    _TMP9 = dot(vec3(float(_vs_lightPosition1.x), float(_vs_lightPosition1.y), float(_vs_lightPosition1.z)), vec3(float(_TMP22.x), float(_TMP22.y), float(_TMP22.z)));
+    _TMP4 = float(_TMP9);
+    _TMP10 = max(0.00000000E+000, float(_TMP4));
+    _TMP5 = float(_TMP10);
+    _TMP24 = _TMP5*_vs_lightPosition1.w;
+    _diffuseLight0108 = _TMP23*_vs_lightColor0.xyz;
+    _diffuseLight0108 = _diffuseLight0108 + _TMP24*_vs_lightColor1.xyz;
+    _diffuseLight0108 = _diffuseLight0108 + _ambientColor.xyz + _vs_sceneAmbientColor.xyz;
+    _diffuseLight0108 = _diffuseLight0108 + _incandescentGlow.xyz*(vec3( 1.00000000E+000, 1.00000000E+000, 1.00000000E+000) - _diffuseLight0108);
+    _TMP770112 = _colorLayer00095.xyz*_diffuseLight0108;
+    _TMP0 = vec4(_TMP770112.x, _TMP770112.y, _TMP770112.z, _colorLayer00095.w);
+    _TMP14._color[0] = vec4(float(_TMP0.x), float(_TMP0.y), float(_TMP0.z), float(_TMP0.w));
+    _falloff0113 = float(_input1._texcoord1);
+    _b0115 = vec3(float(_TMP14._color[0].x), float(_TMP14._color[0].y), float(_TMP14._color[0].z));
+    _TMP6 = _fog_color.xyz + _falloff0113*(_b0115 - _fog_color.xyz);
+    _TMP14._color[0].xyz = vec3(float(_TMP6.x), float(_TMP6.y), float(_TMP6.z));
+    cg_FragColor = _TMP14._color[0];
+}
