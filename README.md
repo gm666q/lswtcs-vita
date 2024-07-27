@@ -100,7 +100,10 @@ WIP
 Known Issues
 ------------
 
-WIP
+- Cutscenes don't play and must be manually skipped (press start)
+- On the "Touch to Start" screen you must press the start button, otherwise only the touch screen will work
+- Some pushable objects don't work, making it impossible to complete some levels.
+- Visual glitches at startup
 
 Build Instructions (For Developers)
 ----------------

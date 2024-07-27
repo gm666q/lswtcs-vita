@@ -1,5 +1,6 @@
 /*
  * Copyright (C) 2022-2024 Volodymyr Atamanenko
+ * Copyright (C) 2024      Jan Smialkowski
  *
  * This software may be modified and distributed under the terms
  * of the MIT license. See the LICENSE file for details.
@@ -16,7 +17,7 @@
 EGLBoolean eglInitialize(EGLDisplay dpy, EGLint *major, EGLint *minor) {
     l_debug("eglInitialize(0x%x)", (int)dpy);
 
-    gl_init();
+    vglInitWithCustomThreshold(0, 960, 544, 18 * 1024 * 1024, 0, 20 * 1024 * 1024, 12 * 1024 * 1024, SCE_GXM_MULTISAMPLE_4X);
 
     if (major) *major = 2;
     if (minor) *minor = 2;
@@ -276,6 +277,12 @@ EGLContext eglCreateContext(EGLDisplay dpy, EGLConfig config,
                             const EGLint *attrib_list) {
     // Just something that is a valid pointer which can be freed later
     return strdup("ctx");
+}
+
+EGLSurface eglCreatePbufferSurface(EGLDisplay dpy, EGLConfig config,
+                                   const EGLint *attrib_list) {
+    // Just something that is a valid pointer which can be freed later
+    return strdup("surface");
 }
 
 EGLSurface eglCreateWindowSurface(EGLDisplay dpy, EGLConfig config,

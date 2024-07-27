@@ -2,6 +2,7 @@
  * Copyright (C) 2021      Andy Nguyen
  * Copyright (C) 2021-2022 Rinnegatamante
  * Copyright (C) 2022-2024 Volodymyr Atamanenko
+ * Copyright (C) 2024      Jan Smialkowski
  *
  * This software may be modified and distributed under the terms
  * of the MIT license. See the LICENSE file for details.
@@ -14,6 +15,7 @@
 #include "utils/logger.h"
 #include "utils/utils.h"
 #include "utils/settings.h"
+#include "utils/tt_activity.h"
 
 #include <string.h>
 
@@ -89,6 +91,9 @@ void soloader_init_all() {
 
     so_initialize(&so_mod);
     l_success("SO initialized.");
+
+    tt_activity_init();
+    l_success("TTActivity initialized.");
 
     gl_preload();
     l_success("OpenGL preloaded.");

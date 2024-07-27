@@ -1,6 +1,7 @@
 /*
  * Copyright (C) 2021      Rinnegatamante
  * Copyright (C) 2022-2024 Volodymyr Atamanenko
+ * Copyright (C) 2024      Jan Smialkowski
  *
  * This software may be modified and distributed under the terms
  * of the MIT license. See the LICENSE file for details.
@@ -9,6 +10,8 @@
 #include "utils/utils.h"
 #include "utils/logger.h"
 
+#include <psp2/apputil.h>
+#include <psp2/system_param.h>
 #include <psp2/io/stat.h>
 
 #include <dirent.h>
@@ -246,6 +249,58 @@ bool is_dir(const char * path) {
     }
 
     return false;
+}
+
+const char * locale_str() {
+    SceSystemParamLang lang;
+    if (sceAppUtilSystemParamGetInt(SCE_SYSTEM_PARAM_ID_LANG, (int *) &lang) != SCE_OK) {
+        lang = SCE_SYSTEM_PARAM_LANG_MAX_VALUE;
+    }
+
+    switch (lang) {
+        case SCE_SYSTEM_PARAM_LANG_JAPANESE:
+            return "ja-JP";
+        case SCE_SYSTEM_PARAM_LANG_ENGLISH_US:
+            return "en-US";
+        case SCE_SYSTEM_PARAM_LANG_FRENCH:
+            return "fr-FR";
+        case SCE_SYSTEM_PARAM_LANG_SPANISH:
+            return "es-ES";
+        case SCE_SYSTEM_PARAM_LANG_GERMAN:
+            return "de-DE";
+        case SCE_SYSTEM_PARAM_LANG_ITALIAN:
+            return "it-IT";
+        case SCE_SYSTEM_PARAM_LANG_DUTCH:
+            return "nl-NL";
+        case SCE_SYSTEM_PARAM_LANG_PORTUGUESE_PT:
+            return "pt-PT";
+        case SCE_SYSTEM_PARAM_LANG_RUSSIAN:
+            return "ru-RU";
+        case SCE_SYSTEM_PARAM_LANG_KOREAN:
+            return "ko-KR";
+        case SCE_SYSTEM_PARAM_LANG_CHINESE_T:
+            return "zh-TW";
+        case SCE_SYSTEM_PARAM_LANG_CHINESE_S:
+            return "zh-CN";
+        case SCE_SYSTEM_PARAM_LANG_FINNISH:
+            return "fi-FI";
+        case SCE_SYSTEM_PARAM_LANG_SWEDISH:
+            return "sv-SE";
+        case SCE_SYSTEM_PARAM_LANG_DANISH:
+            return "da-DK";
+        case SCE_SYSTEM_PARAM_LANG_NORWEGIAN:
+            return "no-NO";
+        case SCE_SYSTEM_PARAM_LANG_POLISH:
+            return "pl-PL";
+        case SCE_SYSTEM_PARAM_LANG_PORTUGUESE_BR:
+            return "pt-BR";
+        case SCE_SYSTEM_PARAM_LANG_ENGLISH_GB:
+            return "en-GB";
+        case SCE_SYSTEM_PARAM_LANG_TURKISH:
+            return "tr-TR";
+        default:
+            return "en-US";
+    }
 }
 
 SceUID _vshKernelSearchModuleByName(const char *, int *);

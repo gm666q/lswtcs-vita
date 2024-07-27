@@ -28,7 +28,7 @@ char WINDOW_SERVICE[] = "window";
 // System-wide constant that's often used to determine Android version
 // https://developer.android.com/reference/android/os/Build.VERSION.html#SDK_INT
 // Possible values: https://developer.android.com/reference/android/os/Build.VERSION_CODES
-const int SDK_INT = 19; // Android 4.4 / KitKat
+const int SDK_INT = 17; // Android 4.2.2 / Jelly Bean
 
 NameToFieldID nameToFieldId[] = {
 		{ 0, "WINDOW_SERVICE", FIELD_TYPE_OBJECT }, 

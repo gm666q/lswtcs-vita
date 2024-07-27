@@ -1,6 +1,7 @@
 /*
  * Copyright (C) 2021      Rinnegatamante
  * Copyright (C) 2022-2024 Volodymyr Atamanenko
+ * Copyright (C) 2024      Jan Smialkowski
  *
  * This software may be modified and distributed under the terms
  * of the MIT license. See the LICENSE file for details.
@@ -115,6 +116,12 @@ char * file_sha1sum(const char * path);
  * @return `true` if path is a directory, `false` otherwise.
  */
 bool is_dir(const char * path);
+
+/**
+ *
+ * @return
+ */
+const char * locale_str();
 
 /**
  * Check whether system module is loaded.

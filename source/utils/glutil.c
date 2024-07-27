@@ -2,6 +2,7 @@
  * Copyright (C) 2021      Andy Nguyen
  * Copyright (C) 2021      Rinnegatamante
  * Copyright (C) 2022-2023 Volodymyr Atamanenko
+ * Copyright (C) 2024      Jan Smialkowski
  *
  * This software may be modified and distributed under the terms
  * of the MIT license. See the LICENSE file for details.
@@ -16,12 +17,16 @@
 #include <stdio.h>
 #include <malloc.h>
 #include <string.h>
-#include <psp2/kernel/sysmem.h>
-#include <psp2/io/stat.h>
 
 // Helpers for our handling of shaders
 GLboolean skip_next_compile = GL_FALSE;
 char next_shader_fname[256];
+
+#define UNIFORMS_SIZE 0x2000
+static GLint uniforms[UNIFORMS_SIZE];
+static GLint uniform_count = UNIFORMS_SIZE;
+
+GLint find_uniform(GLint u);
 void load_shader(GLuint shader, const char * string, size_t length);
 
 void gl_preload() {
@@ -31,63 +36,11 @@ void gl_preload() {
                     "Google \"ShaRKBR33D\" for quick installation.");
     }
 
+    memset(uniforms, -1, 0x1000);
+
 #ifdef USE_GLSL_SHADERS
     vglSetSemanticBindingMode(VGL_MODE_POSTPONED);
 #endif
-}
-
-void gl_init() {
-    vglInitExtended(0, 960, 544, 6 * 1024 * 1024, SCE_GXM_MULTISAMPLE_4X);
-}
-
-void gl_swap() {
-    vglSwapBuffers(GL_FALSE);
-}
-
-void glShaderSource_soloader(GLuint shader, GLsizei count,
-                             const GLchar **string, const GLint *_length) {
-#ifdef DEBUG_OPENGL
-    sceClibPrintf("[gl_dbg] glShaderSource<%p>(shader: %i, count: %i, string: %p, length: %p)\n", __builtin_return_address(0), shader, count, string, _length);
-#endif
-    if (!string) {
-        l_error("<%p> Shader source string is NULL, count: %i",
-                   __builtin_return_address(0), count);
-        skip_next_compile = GL_TRUE;
-        return;
-    } else if (!*string) {
-        l_error("<%p> Shader source *string is NULL, count: %i",
-                   __builtin_return_address(0), count);
-        skip_next_compile = GL_TRUE;
-        return;
-    }
-
-    size_t total_length = 0;
-
-    for (int i = 0; i < count; ++i) {
-        if (!_length) {
-            total_length += strlen(string[i]);
-        } else {
-            total_length += _length[i];
-        }
-    }
-
-    char * str = malloc(total_length+1);
-    size_t l = 0;
-
-    for (int i = 0; i < count; ++i) {
-        if (!_length) {
-            memcpy(str + l, string[i], strlen(string[i]));
-            l += strlen(string[i]);
-        } else {
-            memcpy(str + l, string[i], _length[i]);
-            l += _length[i];
-        }
-    }
-    str[total_length] = '\0';
-
-    load_shader(shader, str, total_length);
-
-    free(str);
 }
 
 void glCompileShader_soloader(GLuint shader) {
@@ -108,6 +61,102 @@ void glCompileShader_soloader(GLuint shader) {
     }
     skip_next_compile = GL_FALSE;
 #endif
+}
+
+const GLubyte *glGetString_soloader(GLenum name) {
+    switch (name) {
+        case GL_VENDOR:
+            return "Imagination Technologies";
+        case GL_RENDERER:
+            return "PowerVR SGX 544MP";
+        default:
+            return glGetString(name);
+    }
+}
+
+GLint glGetUniformLocation_soloader(GLuint prog, const GLchar *name) {
+    return find_uniform(glGetUniformLocation(prog, name));
+}
+
+void glShaderSource_soloader(GLuint handle, GLsizei count, const GLchar *const *string, const GLint *length) {
+#ifdef DEBUG_OPENGL
+    sceClibPrintf("[gl_dbg] glShaderSource<%p>(shader: %i, count: %i, string: %p, length: %p)\n", __builtin_return_address(0), handle, count, string, length);
+#endif
+    if (!string) {
+        l_error("<%p> Shader source string is NULL, count: %i",
+                   __builtin_return_address(0), count);
+        skip_next_compile = GL_TRUE;
+        return;
+    } else if (!*string) {
+        l_error("<%p> Shader source *string is NULL, count: %i",
+                   __builtin_return_address(0), count);
+        skip_next_compile = GL_TRUE;
+        return;
+    }
+
+    size_t total_length = 0;
+
+    for (int i = 0; i < count; ++i) {
+        if (!length) {
+            total_length += strlen(string[i]);
+        } else {
+            total_length += length[i];
+        }
+    }
+
+    char * str = malloc(total_length+1);
+    size_t l = 0;
+
+    for (int i = 0; i < count; ++i) {
+        if (!length) {
+            memcpy(str + l, string[i], strlen(string[i]));
+            l += strlen(string[i]);
+        } else {
+            memcpy(str + l, string[i], length[i]);
+            l += length[i];
+        }
+    }
+    str[total_length] = '\0';
+
+    load_shader(handle, str, total_length);
+
+    free(str);
+}
+
+void glUniform1fv_soloader(GLint location, GLsizei count, const GLfloat *value) {
+    glUniform1fv(uniforms[location], count, value);
+}
+
+void glUniform1i_soloader(GLint location, GLint v0) {
+    glUniform1i(uniforms[location], v0);
+}
+
+void glUniform2fv_soloader(GLint location, GLsizei count, const GLfloat *value) {
+    glUniform2fv(uniforms[location], count, value);
+}
+
+void glUniform3fv_soloader(GLint location, GLsizei count, const GLfloat *value) {
+    glUniform3fv(uniforms[location], count, value);
+}
+
+void glUniform4fv_soloader(GLint location, GLsizei count, const GLfloat *value) {
+    glUniform4fv(uniforms[location], count, value);
+}
+
+GLint find_uniform(GLint u) {
+    for (GLint i = 0; i < UNIFORMS_SIZE; ++i) {
+        if (uniforms[i] == -1) {
+            uniforms[i] = u;
+            return i;
+        }
+        if (uniforms[i] == u) {
+            return i;
+        }
+    }
+
+    uniform_count += 1;
+    l_error("MORE THEN %u UNIFORMS USED; %u", UNIFORMS_SIZE, uniform_count);
+    return -1;
 }
 
 #if defined(USE_GLSL_SHADERS) && defined(DUMP_COMPILED_SHADERS)
@@ -233,7 +282,7 @@ void load_shader(GLuint shader, const char * string, size_t length) {
         file_save(glsl_path, (const uint8_t *) string, length);
 
         if (strstr(string, "gl_FragColor")) {
-            const char *dummy_shader = "float4 main() { return float4(1.0,1.0,1.0,1.0); }";
+            const char *dummy_shader = "void main(float4 out gl_FragColor : COLOR) { gl_FragColor = float4(1.0,1.0,1.0,1.0); }";
             int32_t dummy_shader_len = (int32_t) strlen(dummy_shader);
             glShaderSource(shader, 1, &dummy_shader, &dummy_shader_len);
         } else {

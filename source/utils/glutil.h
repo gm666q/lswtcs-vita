@@ -2,6 +2,7 @@
  * Copyright (C) 2021      Andy Nguyen
  * Copyright (C) 2021      Rinnegatamante
  * Copyright (C) 2022-2023 Volodymyr Atamanenko
+ * Copyright (C) 2024      Jan Smialkowski
  *
  * This software may be modified and distributed under the terms
  * of the MIT license. See the LICENSE file for details.
@@ -21,16 +22,25 @@
 extern "C" {
 #endif
 
-void gl_init();
-
 void gl_preload();
-
-void gl_swap();
 
 void glCompileShader_soloader(GLuint shader);
 
-void glShaderSource_soloader(GLuint shader, GLsizei count,
-                             const GLchar **string, const GLint *_length);
+const GLubyte *glGetString_soloader(GLenum name);
+
+GLint glGetUniformLocation_soloader(GLuint prog, const GLchar *name);
+
+void glShaderSource_soloader(GLuint handle, GLsizei count, const GLchar *const *string, const GLint *length);
+
+void glUniform1fv_soloader(GLint location, GLsizei count, const GLfloat *value);
+
+void glUniform1i_soloader(GLint location, GLint v0);
+
+void glUniform2fv_soloader(GLint location, GLsizei count, const GLfloat *value);
+
+void glUniform3fv_soloader(GLint location, GLsizei count, const GLfloat *value);
+
+void glUniform4fv_soloader(GLint location, GLsizei count, const GLfloat *value);
 
 #ifdef __cplusplus
 };

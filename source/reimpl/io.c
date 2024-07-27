@@ -2,10 +2,13 @@
  * Copyright (C) 2021      Andy Nguyen
  * Copyright (C) 2022      Rinnegatamante
  * Copyright (C) 2022-2024 Volodymyr Atamanenko
+ * Copyright (C) 2024      Jan Smialkowski
  *
  * This software may be modified and distributed under the terms
  * of the MIT license. See the LICENSE file for details.
  */
+
+#include "../config.h"
 
 #include "reimpl/io.h"
 
@@ -30,34 +33,51 @@
 // void stat_newlib_to_bionic(struct stat * src, stat64_bionic * dst);
 #include "reimpl/bits/_struct_converters.c"
 
-FILE * fopen_soloader(const char * filename, const char * mode) {
-    if (strcmp(filename, "/proc/cpuinfo") == 0) {
-        return fopen_soloader("app0:/cpuinfo", mode);
-    } else if (strcmp(filename, "/proc/meminfo") == 0) {
-        return fopen_soloader("app0:/meminfo", mode);
+const char* fix_path(const char* filename) {
+    static char buf[512];
+    static const char* file = NULL;
+
+    if(filename[0] != '/') {
+        return filename;
     }
 
+    file = strstr(filename, EXTERNAL_DATA_PATH);
+    if (file != NULL) {
+        snprintf(buf, sizeof(buf), "%s%s", DATA_PATH, file + strlen(EXTERNAL_DATA_PATH) + 1);
+        return buf;
+    }
+    file = strstr(filename, EXTERNAL_OBB_PATH);
+    if (file != NULL) {
+        snprintf(buf, sizeof(buf), "%s%s", DATA_PATH, file + strlen(EXTERNAL_OBB_PATH) + 1);
+        return buf;
+    }
+    file = strstr(filename, INTERNAL_PATH);
+    if (file != NULL) {
+        snprintf(buf, sizeof(buf), "%s%s", DATA_PATH, file + strlen(INTERNAL_PATH) + 1);
+        return buf;
+    }
+
+    return filename;
+}
+
+FILE * fopen_soloader(const char * filename, const char * mode) {
+    const char* p = fix_path(filename);
+
 #ifdef USE_SCELIBC_IO
-    FILE* ret = sceLibcBridge_fopen(filename, mode);
+    FILE* ret = sceLibcBridge_fopen(p, mode);
 #else
-    FILE* ret = fopen(filename, mode);
+    FILE* ret = fopen(p, mode);
 #endif
 
     if (ret)
-        l_debug("fopen(%s, %s): %p", filename, mode, ret);
+        l_debug("fopen(%s => %s, %s): %p", filename, p, mode, ret);
     else
-        l_warn("fopen(%s, %s): %p", filename, mode, ret);
+        l_warn("fopen(%s => %s, %s): %p", filename, p, mode, ret);
 
     return ret;
 }
 
 int open_soloader(const char * path, int oflag, ...) {
-    if (strcmp(path, "/proc/cpuinfo") == 0) {
-        return open_soloader("app0:/cpuinfo", oflag);
-    } else if (strcmp(path, "/proc/meminfo") == 0) {
-        return open_soloader("app0:/meminfo", oflag);
-    }
-
     mode_t mode = 0666;
     if (((oflag & BIONIC_O_CREAT) == BIONIC_O_CREAT) ||
         ((oflag & BIONIC_O_TMPFILE) == BIONIC_O_TMPFILE)) {
