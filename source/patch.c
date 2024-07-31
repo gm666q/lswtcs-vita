@@ -21,6 +21,7 @@
 
 #include "reimpl/native_window.h"
 #include "utils/logger.h"
+#include "utils/utils.h"
 
 typedef uint8_t NuRenderDevice;
 
@@ -98,13 +99,14 @@ void so_patch(void) {
 
     _Z11AndroidMainPv_hook = hook_addr((uintptr_t) so_symbol(&so_mod, "_Z11AndroidMainPv"),
                                        (uintptr_t) &_Z11AndroidMainPv);
+    hook_addr((uintptr_t) so_symbol(&so_mod, "_Z17LinkShaderProgramj"), (uintptr_t) &ret0);
     _Z17renderThread_mainPv_hook = hook_addr((uintptr_t) so_symbol(&so_mod, "_Z17renderThread_mainPv"),
                                              (uintptr_t) &_Z17renderThread_mainPv);
     _ZN8NuThread10ThreadMainEPv_hook = hook_addr((uintptr_t) so_symbol(&so_mod, "_ZN8NuThread10ThreadMainEPv"),
                                                  (uintptr_t) &_ZN8NuThread10ThreadMainEPv);
-    _ZN14NuRenderDevice23InitialiseOpenGLContextEP13ANativeWindow_hook = hook_addr(
+    /*_ZN14NuRenderDevice23InitialiseOpenGLContextEP13ANativeWindow_hook = hook_addr(
         (uintptr_t) so_symbol(&so_mod, "_ZN14NuRenderDevice23InitialiseOpenGLContextEP13ANativeWindow"),
-        (uintptr_t) &_ZN14NuRenderDevice23InitialiseOpenGLContextEP13ANativeWindow);
+        (uintptr_t) &_ZN14NuRenderDevice23InitialiseOpenGLContextEP13ANativeWindow);*/
 
     hook_addr((uintptr_t) so_symbol(&so_mod, "IsMusicActive"), (uintptr_t) &IsMusicActive);
 

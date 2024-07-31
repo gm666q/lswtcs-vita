@@ -10,4 +10,4 @@ do
   wine ./psp2cgc.exe -profile "$profile" "cg/$sha.cg" -cache -W4 -Wperf -fastprecision -O4 -o "gxp/$sha.gxp"
 done
 
-rm -rf gxp/*.sdb
+#rm -rf gxp/*.sdb

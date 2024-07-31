@@ -206,5 +206,7 @@ int main() {
     pthread_attr_init(&attr);
     pthread_attr_setstacksize(&attr, 256 * 1024);
     pthread_create(&t, &attr, &controls_thread, NULL);
-    pthread_join(t, NULL);
+    pthread_detach(t);
+
+    return sceKernelExitDeleteThread(0);
 }

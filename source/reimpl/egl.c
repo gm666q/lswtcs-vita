@@ -17,7 +17,7 @@
 EGLBoolean eglInitialize(EGLDisplay dpy, EGLint *major, EGLint *minor) {
     l_debug("eglInitialize(0x%x)", (int)dpy);
 
-    vglInitWithCustomThreshold(0, 960, 544, 18 * 1024 * 1024, 0, 20 * 1024 * 1024, 12 * 1024 * 1024, SCE_GXM_MULTISAMPLE_4X);
+    vglInitWithCustomThreshold(0, 960, 544, 18 * 1024 * 1024, 0, 0, 0, SCE_GXM_MULTISAMPLE_4X);
 
     if (major) *major = 2;
     if (minor) *minor = 2;
