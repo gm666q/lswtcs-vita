@@ -50,6 +50,7 @@
 #include "reimpl/pthr.h"
 #include "reimpl/sys.h"
 #include "reimpl/egl.h"
+#include "reimpl/gl.h"
 #include "reimpl/asset_manager.h"
 #include "reimpl/native_window.h"
 
@@ -67,8 +68,6 @@ extern void *__stack_chk_guard;
 extern const short *BIONIC_toupper_tab_;
 
 static FILE __sF_fake[3];
-
-GLuint current_program = 0;
 
 void *dlsym_soloader(void *handle, const char *symbol) {
     // Usage example:
@@ -229,22 +228,22 @@ so_default_dynlib default_dynlib[] = {
 
 
         // OpenGL
-        { "glActiveTexture", (uintptr_t)&glActiveTexture },
+        { "glActiveTexture", (uintptr_t)&glActiveTexture_soloader },
         { "glAttachShader", (uintptr_t)&glAttachShader },
         { "glBindAttribLocation", (uintptr_t)&glBindAttribLocation },
-        { "glBindBuffer", (uintptr_t)&glBindBuffer },
+        { "glBindBuffer", (uintptr_t)&glBindBuffer_soloader },
         { "glBindFramebuffer", (uintptr_t)&glBindFramebuffer },
-        { "glBindTexture", (uintptr_t)&glBindTexture },
+        { "glBindTexture", (uintptr_t)&glBindTexture_soloader },
         { "glBlendEquationSeparate", (uintptr_t)&glBlendEquationSeparate },
         { "glBlendFuncSeparate", (uintptr_t)&glBlendFuncSeparate },
-        { "glBufferData", (uintptr_t)&glBufferData },
-        { "glBufferSubData", (uintptr_t)&glBufferSubData },
+        { "glBufferData", (uintptr_t)&glBufferData_soloader },
+        { "glBufferSubData", (uintptr_t)&glBufferSubData_soloader },
         { "glCheckFramebufferStatus", (uintptr_t)&glCheckFramebufferStatus },
         { "glClear", (uintptr_t)&glClear },
         { "glClearColor", (uintptr_t)&glClearColor },
         { "glCompileShader", (uintptr_t)&glCompileShader_soloader },
-        { "glCompressedTexImage2D", (uintptr_t)&glCompressedTexImage2D },
-        { "glCopyTexImage2D", (uintptr_t)&glCopyTexImage2D },
+        { "glCompressedTexImage2D", (uintptr_t)&glCompressedTexImage2D_soloader },
+        { "glCopyTexImage2D", (uintptr_t)&glCopyTexImage2D_soloader },
         { "glCreateProgram", (uintptr_t)&glCreateProgram },
         { "glCreateShader", (uintptr_t)&glCreateShader },
         { "glCullFace", (uintptr_t)&glCullFace },
@@ -266,7 +265,7 @@ so_default_dynlib default_dynlib[] = {
         { "glFlush", (uintptr_t)&glFlush },
         { "glFrontFace", (uintptr_t)&glFrontFace },
         { "glGenBuffers", (uintptr_t)&glGenBuffers },
-        { "glGenerateMipmap", (uintptr_t)&glGenerateMipmap },
+        { "glGenerateMipmap", (uintptr_t)&glGenerateMipmap_soloader },
         { "glGenFramebuffers", (uintptr_t)&glGenFramebuffers },
         { "glGenTextures", (uintptr_t)&glGenTextures },
         { "glGetActiveAttrib", (uintptr_t)&glGetActiveAttrib },
@@ -274,7 +273,7 @@ so_default_dynlib default_dynlib[] = {
         { "glGetAttachedShaders", (uintptr_t)&glGetAttachedShaders },
         { "glGetAttribLocation", (uintptr_t)&glGetAttribLocation },
         { "glGetError", (uintptr_t)&glGetError },
-        { "glGetIntegerv", (uintptr_t)&glGetIntegerv },
+        { "glGetIntegerv", (uintptr_t)&glGetIntegerv_soloader },
         { "glGetProgramInfoLog", (uintptr_t)&glGetProgramInfoLog },
         { "glGetProgramiv", (uintptr_t)&glGetProgramiv },
         { "glGetShaderSource", (uintptr_t)&glGetShaderSource },
@@ -286,14 +285,14 @@ so_default_dynlib default_dynlib[] = {
         { "glLinkProgram", (uintptr_t)&glLinkProgram },
         { "glReleaseShaderCompiler", (uintptr_t)&glReleaseShaderCompiler },
         { "glShaderSource", (uintptr_t)&glShaderSource_soloader },
-        { "glTexImage2D", (uintptr_t)&glTexImage2D },
-        { "glTexParameteri", (uintptr_t)&glTexParameteri },
+        { "glTexImage2D", (uintptr_t)&glTexImage2D_soloader },
+        { "glTexParameteri", (uintptr_t)&glTexParameteri_soloader },
         { "glUniform1fv", (uintptr_t)&glUniform1fv_soloader },
         { "glUniform1i", (uintptr_t)&glUniform1i_soloader },
         { "glUniform2fv", (uintptr_t)&glUniform2fv_soloader },
         { "glUniform3fv", (uintptr_t)&glUniform3fv_soloader },
         { "glUniform4fv", (uintptr_t)&glUniform4fv_soloader },
-        { "glUseProgram", (uintptr_t)&glUseProgram },
+        { "glUseProgram", (uintptr_t)&glUseProgram_soloader },
         { "glValidateProgram", (uintptr_t)&ret0 },
         { "glVertexAttribPointer", (uintptr_t)&glVertexAttribPointer },
         { "glViewport", (uintptr_t)&glViewport },

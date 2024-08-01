@@ -14,6 +14,10 @@
 #include <string.h>
 #include <stdlib.h>
 
+extern _Thread_local _egl_context* current_context;
+
+void reset_context(_egl_context* context);
+
 EGLBoolean eglInitialize(EGLDisplay dpy, EGLint *major, EGLint *minor) {
     l_debug("eglInitialize(0x%x)", (int)dpy);
 
@@ -275,24 +279,39 @@ EGLBoolean eglChooseConfig(EGLDisplay dpy, const EGLint *attrib_list,
 EGLContext eglCreateContext(EGLDisplay dpy, EGLConfig config,
                             EGLContext share_context,
                             const EGLint *attrib_list) {
-    // Just something that is a valid pointer which can be freed later
-    return strdup("ctx");
+    _egl_context *context = malloc(sizeof(_egl_context));
+    reset_context(context);
+    return context;
 }
 
 EGLSurface eglCreatePbufferSurface(EGLDisplay dpy, EGLConfig config,
                                    const EGLint *attrib_list) {
     // Just something that is a valid pointer which can be freed later
-    return strdup("surface");
+    return strdup("pbuffer");
 }
 
 EGLSurface eglCreateWindowSurface(EGLDisplay dpy, EGLConfig config,
                                   void * win, const EGLint *attrib_list) {
     // Just something that is a valid pointer which can be freed later
-    return strdup("surface");
+    return strdup("window");
 }
 
 EGLBoolean eglMakeCurrent(EGLDisplay dpy, EGLSurface draw, EGLSurface read,
                           EGLContext ctx) {
+    _egl_context *context = ctx;
+
+    if (context == NULL) {
+        current_context = NULL;
+        return EGL_TRUE;
+    }
+
+    if (draw == NULL || read == NULL) {
+        return EGL_FALSE;
+    }
+
+    context->is_fake = ((char *) draw)[0] == 'p' ? EGL_TRUE : EGL_FALSE;
+    current_context = context;
+
     return EGL_TRUE;
 }
 
@@ -307,11 +326,12 @@ EGLBoolean eglDestroySurface (EGLDisplay dpy, EGLSurface surface) {
 }
 
 EGLBoolean eglTerminate(EGLDisplay dpy) {
+    // TODO: Maybe keep track of contexts and free
     return EGL_TRUE;
 }
 
 EGLContext eglGetCurrentContext (void) {
-    return strdup("ctx");
+    return current_context;
 }
 
 char const * eglQueryString(EGLDisplay display, EGLint name) {
@@ -351,4 +371,8 @@ EGLBoolean eglGetConfigs(EGLDisplay display, EGLConfig * configs,
     *num_config = 1;
 
     return EGL_TRUE;
+}
+
+void reset_context(_egl_context* context) {
+    memset(context, 0, sizeof(_egl_context));
 }

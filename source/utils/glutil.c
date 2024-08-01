@@ -10,6 +10,8 @@
 
 #include "utils/glutil.h"
 
+#include <reimpl/gl.h>
+
 #include "utils/utils.h"
 #include "utils/dialog.h"
 #include "utils/logger.h"
@@ -18,30 +20,15 @@
 #include <malloc.h>
 #include <string.h>
 
+_Thread_local _egl_context* current_context = NULL;
+
 // Helpers for our handling of shaders
 GLboolean skip_next_compile = GL_FALSE;
 char next_shader_fname[256];
 
-#define UNIFORMS_SIZE 0x2000
-static GLint uniforms[UNIFORMS_SIZE];
-static GLint uniform_count = UNIFORMS_SIZE;
+GLint uniforms[GLUTIL_MAX_PROGRAMS * GLUTIL_MAX_UNIFORMS];
 
-GLint find_uniform(GLint u);
 void load_shader(GLuint shader, const char * string, size_t length);
-
-void gl_preload() {
-    if (!file_exists("ur0:/data/libshacccg.suprx")
-        && !file_exists("ur0:/data/external/libshacccg.suprx")) {
-        fatal_error("Error: libshacccg.suprx is not installed. "
-                    "Google \"ShaRKBR33D\" for quick installation.");
-    }
-
-    memset(uniforms, -1, 0x1000);
-
-#ifdef USE_GLSL_SHADERS
-    vglSetSemanticBindingMode(VGL_MODE_POSTPONED);
-#endif
-}
 
 void glCompileShader_soloader(GLuint shader) {
 #ifdef DEBUG_OPENGL
@@ -61,21 +48,6 @@ void glCompileShader_soloader(GLuint shader) {
     }
     skip_next_compile = GL_FALSE;
 #endif
-}
-
-const GLubyte *glGetString_soloader(GLenum name) {
-    switch (name) {
-        case GL_VENDOR:
-            return "Imagination Technologies";
-        case GL_RENDERER:
-            return "PowerVR SGX 544MP";
-        default:
-            return glGetString(name);
-    }
-}
-
-GLint glGetUniformLocation_soloader(GLuint prog, const GLchar *name) {
-    return find_uniform(glGetUniformLocation(prog, name));
 }
 
 void glShaderSource_soloader(GLuint handle, GLsizei count, const GLchar *const *string, const GLint *length) {
@@ -123,40 +95,18 @@ void glShaderSource_soloader(GLuint handle, GLsizei count, const GLchar *const *
     free(str);
 }
 
-void glUniform1fv_soloader(GLint location, GLsizei count, const GLfloat *value) {
-    glUniform1fv(uniforms[location], count, value);
-}
-
-void glUniform1i_soloader(GLint location, GLint v0) {
-    glUniform1i(uniforms[location], v0);
-}
-
-void glUniform2fv_soloader(GLint location, GLsizei count, const GLfloat *value) {
-    glUniform2fv(uniforms[location], count, value);
-}
-
-void glUniform3fv_soloader(GLint location, GLsizei count, const GLfloat *value) {
-    glUniform3fv(uniforms[location], count, value);
-}
-
-void glUniform4fv_soloader(GLint location, GLsizei count, const GLfloat *value) {
-    glUniform4fv(uniforms[location], count, value);
-}
-
-GLint find_uniform(GLint u) {
-    for (GLint i = 0; i < UNIFORMS_SIZE; ++i) {
-        if (uniforms[i] == -1) {
-            uniforms[i] = u;
-            return i;
+void gl_preload() {
+    if (!file_exists("ur0:/data/libshacccg.suprx")
+        && !file_exists("ur0:/data/external/libshacccg.suprx")) {
+        fatal_error("Error: libshacccg.suprx is not installed. "
+                    "Google \"ShaRKBR33D\" for quick installation.");
         }
-        if (uniforms[i] == u) {
-            return i;
-        }
-    }
 
-    uniform_count += 1;
-    l_error("MORE THEN %u UNIFORMS USED; %u", UNIFORMS_SIZE, uniform_count);
-    return -1;
+    memset(uniforms, -1, sizeof(uniforms));
+
+#ifdef USE_GLSL_SHADERS
+    vglSetSemanticBindingMode(VGL_MODE_POSTPONED);
+#endif
 }
 
 #if defined(USE_GLSL_SHADERS) && defined(DUMP_COMPILED_SHADERS)

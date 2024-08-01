@@ -18,29 +18,22 @@
 
 #include <vitaGL.h>
 
+#define GLUTIL_MAX_PROGRAMS 1024
+#define GLUTIL_MAX_UNIFORMS 1024
+
 #ifdef __cplusplus
 extern "C" {
 #endif
 
+typedef struct _egl_context {
+    GLuint buffers[2];
+    EGLBoolean is_fake;
+    GLuint program;
+    size_t texture;
+    GLuint textures[16 * 2];
+} _egl_context;
+
 void gl_preload();
-
-void glCompileShader_soloader(GLuint shader);
-
-const GLubyte *glGetString_soloader(GLenum name);
-
-GLint glGetUniformLocation_soloader(GLuint prog, const GLchar *name);
-
-void glShaderSource_soloader(GLuint handle, GLsizei count, const GLchar *const *string, const GLint *length);
-
-void glUniform1fv_soloader(GLint location, GLsizei count, const GLfloat *value);
-
-void glUniform1i_soloader(GLint location, GLint v0);
-
-void glUniform2fv_soloader(GLint location, GLsizei count, const GLfloat *value);
-
-void glUniform3fv_soloader(GLint location, GLsizei count, const GLfloat *value);
-
-void glUniform4fv_soloader(GLint location, GLsizei count, const GLfloat *value);
 
 #ifdef __cplusplus
 };

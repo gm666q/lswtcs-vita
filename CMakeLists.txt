@@ -75,6 +75,7 @@ add_executable(${CMAKE_PROJECT_NAME}
                source/reimpl/bits/_ctype.c
                source/reimpl/egl.c
                source/reimpl/errno.c
+               source/reimpl/gl.c
                source/reimpl/io.c
                source/reimpl/log.c
                source/reimpl/pthr.c
