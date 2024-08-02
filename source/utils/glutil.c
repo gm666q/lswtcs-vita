@@ -111,10 +111,10 @@ void gl_preload() {
 
 #if defined(USE_GLSL_SHADERS) && defined(DUMP_COMPILED_SHADERS)
 void load_shader(GLuint shader, const char * string, size_t length) {
-    char* sha_name = str_sha1sum(string, length);
+    char* xxh_name = str_xxhsum(string, length);
 
     char gxp_path[256];
-    snprintf(gxp_path, sizeof(gxp_path), DATA_PATH"gxp/%s.gxp", sha_name);
+    snprintf(gxp_path, sizeof(gxp_path), DATA_PATH"gxp/%c%c/%s.gxp", xxh_name[0], xxh_name[1], xxh_name);
 
     if (file_exists(gxp_path)) {
         uint8_t *buffer;
@@ -131,7 +131,7 @@ void load_shader(GLuint shader, const char * string, size_t length) {
         strcpy(next_shader_fname, gxp_path);
     }
 
-    free(sha_name);
+    free(xxh_name);
 }
 #elif defined(USE_GLSL_SHADERS)
 void load_shader(GLuint shader, const char * string, size_t length) {
@@ -139,12 +139,12 @@ void load_shader(GLuint shader, const char * string, size_t length) {
 }
 #elif defined(USE_CG_SHADERS) && defined(DUMP_COMPILED_SHADERS)
 void load_shader(GLuint shader, const char * string, size_t length) {
-    char* sha_name = str_sha1sum(string, length);
+    char* xxh_name = str_xxhsum(string, length);
 
     char gxp_path[256];
     char cg_path[256];
-    snprintf(gxp_path, sizeof(gxp_path), DATA_PATH"gxp/%s.gxp", sha_name);
-    snprintf(cg_path, sizeof(cg_path), DATA_PATH"cg/%s.cg", sha_name);
+    snprintf(gxp_path, sizeof(gxp_path), DATA_PATH"gxp/%c%c/%s.gxp", xxh_name[0], xxh_name[1], xxh_name);
+    snprintf(cg_path, sizeof(cg_path), DATA_PATH"cg/%c%c/%s.cg", xxh_name[0], xxh_name[1], xxh_name);
 
     if (file_exists(gxp_path)) {
         uint8_t *buffer;
@@ -169,10 +169,10 @@ void load_shader(GLuint shader, const char * string, size_t length) {
         skip_next_compile = GL_FALSE;
     } else {
         l_warn("Encountered an untranslated shader %s, saving GLSL "
-               "and using a dummy shader.", sha_name);
+               "and using a dummy shader.", xxh_name);
 
         char glsl_path[256];
-        snprintf(glsl_path, sizeof(glsl_path), DATA_PATH"glsl/%s.glsl", sha_name);
+        snprintf(glsl_path, sizeof(glsl_path), DATA_PATH"glsl/%c%c/%s.glsl", xxh_name[0], xxh_name[1], xxh_name);
         file_mkpath(glsl_path, 0777);
         file_save(glsl_path, (const uint8_t *) string, length);
 
@@ -189,17 +189,17 @@ void load_shader(GLuint shader, const char * string, size_t length) {
         skip_next_compile = GL_FALSE;
     }
 
-    free(sha_name);
+    free(xxh_name);
 }
 #elif defined(USE_CG_SHADERS) || defined(USE_GXP_SHADERS)
 void load_shader(GLuint shader, const char * string, size_t length) {
-    char* sha_name = str_sha1sum(string, length);
+    char* xxh_name = str_xxhsum(string, length);
 
     char path[256];
 #ifdef USE_CG_SHADERS
-    snprintf(path, sizeof(path), DATA_PATH"cg/%s.cg", sha_name);
+    snprintf(path, sizeof(path), DATA_PATH"cg/%c%c/%s.cg", xxh_name[0], xxh_name[1], xxh_name);
 #else
-    snprintf(path, sizeof(path), DATA_PATH"gxp/%s.gxp", sha_name);
+    snprintf(path, sizeof(path), DATA_PATH"gxp/%c%c/%s.gxp", xxh_name[0], xxh_name[1], xxh_name);
 #endif
 
     if (file_exists(path)) {
@@ -224,10 +224,10 @@ void load_shader(GLuint shader, const char * string, size_t length) {
 #endif
     } else {
         l_warn("Encountered an untranslated shader %s, saving GLSL "
-               "and using a dummy shader.", sha_name);
+               "and using a dummy shader.", xxh_name);
 
         char glsl_path[256];
-        snprintf(glsl_path, sizeof(glsl_path), DATA_PATH"glsl/%s.glsl", sha_name);
+        snprintf(glsl_path, sizeof(glsl_path), DATA_PATH"glsl/%c%c/%s.glsl", xxh_name[0], xxh_name[1], xxh_name);
         file_mkpath(glsl_path, 0777);
         file_save(glsl_path, (const uint8_t *) string, length);
 
@@ -242,7 +242,7 @@ void load_shader(GLuint shader, const char * string, size_t length) {
         }
     }
 
-    free(sha_name);
+    free(xxh_name);
 }
 #else
 #error "Define one of (USE_GLSL_SHADERS, USE_CG_SHADERS, USE_GXP_SHADERS)"

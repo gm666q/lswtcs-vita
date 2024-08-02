@@ -92,9 +92,9 @@ add_executable(${CMAKE_PROJECT_NAME}
                lib/falso_jni/FalsoJNI.c
                lib/falso_jni/FalsoJNI_ImplBridge.c
                lib/falso_jni/FalsoJNI_Logger.c
-               lib/sha1/sha1.c
                lib/fios/fios.c
-               lib/so_util/so_util.c)
+               lib/so_util/so_util.c
+               lib/xxhash/xxhash.c)
 
 add_subdirectory(lib/libc_bridge)
 add_dependencies(${CMAKE_PROJECT_NAME} SceLibcBridge)
