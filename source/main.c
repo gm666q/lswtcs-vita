@@ -10,6 +10,7 @@
 #include <stdlib.h>
 
 #include <psp2/ctrl.h>
+#include <psp2/power.h>
 #include <psp2/touch.h>
 #include <psp2/kernel/clib.h>
 #include <psp2/kernel/threadmgr.h>
@@ -153,6 +154,41 @@ void *controls_thread() {
     sceKernelExitDeleteThread(0);
 }
 
+void power_callback(int notifyId, int notifyCount, int powerInfo, void *userData) {
+    if ((powerInfo & SCE_POWER_CB_APP_RESUME) == SCE_POWER_CB_APP_RESUME ||
+        (powerInfo & SCE_POWER_CB_APP_RESUMING) == SCE_POWER_CB_APP_RESUMING) {
+        activity.nativeOnStart(&jni, ACTIVITY_CLASS);
+        activity.nativeOnResume(&jni, ACTIVITY_CLASS);
+    } else if ((powerInfo & SCE_POWER_CB_BUTTON_PS_PRESS) == SCE_POWER_CB_BUTTON_PS_PRESS ||
+               (powerInfo & SCE_POWER_CB_APP_SUSPEND) == SCE_POWER_CB_APP_SUSPEND ||
+               (powerInfo & SCE_POWER_CB_SYSTEM_SUSPEND) == SCE_POWER_CB_SYSTEM_SUSPEND) {
+        activity.nativeOnPause(&jni, ACTIVITY_CLASS);
+        activity.nativeOnStop(&jni, ACTIVITY_CLASS);
+    }
+}
+
+int callback_thread(SceSize args, void *argp) {
+    int cbid = sceKernelCreateCallback("powerCallback", 0, power_callback, NULL);
+    int registered = scePowerRegisterCallback(cbid);
+
+    for (;;) {
+        sceKernelDelayThreadCB(10 * 1000 * 1000);
+    }
+
+    return registered;
+}
+
+SceUID callback_init() {
+    SceUID thid = sceKernelCreateThread("callbackThread", callback_thread, 0x10000100, 0x10000, 0,
+                                        SCE_KERNEL_CPU_MASK_SYSTEM, NULL);
+
+    if (thid >= 0) {
+        sceKernelStartThread(thid, 0, NULL);
+    }
+
+    return thid;
+}
+
 void tt_activity_on_create() {
     activity.nativeCacheJNIVars(&jni, ACTIVITY_CLASS);
     activity.nativeSetManufacturer(&jni, ACTIVITY_CLASS,ANDROID_OS_BUILD_MANUFACTURER);
@@ -189,6 +225,8 @@ int main() {
     l_info("onStart passed");
     activity.nativeOnResume(&jni, ACTIVITY_CLASS);
     l_info("onResume passed");
+
+    //callback_init();
 
     tt_activity_surface_created((jobject) 0x24242424);
     l_info("surfaceCreated passed");
