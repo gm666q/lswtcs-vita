@@ -126,7 +126,7 @@ const GLubyte *glGetString_soloader(GLenum name) {
 }
 
 GLint glGetUniformLocation_soloader(GLuint program, const GLchar *name) {
-#ifdef DEBUG
+#ifdef DEBUG_OPENGL
     const GLint original = glGetUniformLocation(program, name);
     const GLint mapped = find_uniform(program, original);
     l_debug("glGetUniformLocation(%u, %s): %p => %d", program, name, (void*)original, mapped);

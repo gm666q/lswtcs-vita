@@ -1,7 +1,6 @@
 //SharedShaders/0x37f1bd30.ios_pcode uklgonzale Wed Mar 12 17:37:57 2014
 
-precision lowp float;
-
+precision mediump float;
 vec4 texture(sampler2D sampler, vec2 coord) { return texture2D(sampler, coord); }
 vec4 texture(samplerCube sampler, vec3 coord) { return textureCube(sampler, coord); }
 

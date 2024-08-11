@@ -114,7 +114,7 @@ void load_shader(GLuint shader, const char * string, size_t length) {
     char* xxh_name = str_xxhsum(string, length);
 
     char gxp_path[256];
-    snprintf(gxp_path, sizeof(gxp_path), DATA_PATH"gxp/%c%c/%s.gxp", xxh_name[0], xxh_name[1], xxh_name);
+    snprintf(gxp_path, sizeof(gxp_path), DATA_PATH"gxp/%c/%s.gxp", xxh_name[0], xxh_name);
 
     if (file_exists(gxp_path)) {
         uint8_t *buffer;
@@ -143,8 +143,8 @@ void load_shader(GLuint shader, const char * string, size_t length) {
 
     char gxp_path[256];
     char cg_path[256];
-    snprintf(gxp_path, sizeof(gxp_path), DATA_PATH"gxp/%c%c/%s.gxp", xxh_name[0], xxh_name[1], xxh_name);
-    snprintf(cg_path, sizeof(cg_path), DATA_PATH"cg/%c%c/%s.cg", xxh_name[0], xxh_name[1], xxh_name);
+    snprintf(gxp_path, sizeof(gxp_path), DATA_PATH"gxp/%c/%s.gxp", xxh_name[0], xxh_name);
+    snprintf(cg_path, sizeof(cg_path), DATA_PATH"cg/%c/%s.cg", xxh_name[0], xxh_name);
 
     if (file_exists(gxp_path)) {
         uint8_t *buffer;
@@ -172,7 +172,7 @@ void load_shader(GLuint shader, const char * string, size_t length) {
                "and using a dummy shader.", xxh_name);
 
         char glsl_path[256];
-        snprintf(glsl_path, sizeof(glsl_path), DATA_PATH"glsl/%c%c/%s.glsl", xxh_name[0], xxh_name[1], xxh_name);
+        snprintf(glsl_path, sizeof(glsl_path), DATA_PATH"glsl/%c/%s.glsl", xxh_name[0], xxh_name);
         file_mkpath(glsl_path, 0777);
         file_save(glsl_path, (const uint8_t *) string, length);
 
@@ -197,9 +197,9 @@ void load_shader(GLuint shader, const char * string, size_t length) {
 
     char path[256];
 #ifdef USE_CG_SHADERS
-    snprintf(path, sizeof(path), DATA_PATH"cg/%c%c/%s.cg", xxh_name[0], xxh_name[1], xxh_name);
+    snprintf(path, sizeof(path), DATA_PATH"cg/%c/%s.cg", xxh_name[0], xxh_name);
 #else
-    snprintf(path, sizeof(path), DATA_PATH"gxp/%c%c/%s.gxp", xxh_name[0], xxh_name[1], xxh_name);
+    snprintf(path, sizeof(path), DATA_PATH"gxp/%c/%s.gxp", xxh_name[0], xxh_name);
 #endif
 
     if (file_exists(path)) {
@@ -227,7 +227,7 @@ void load_shader(GLuint shader, const char * string, size_t length) {
                "and using a dummy shader.", xxh_name);
 
         char glsl_path[256];
-        snprintf(glsl_path, sizeof(glsl_path), DATA_PATH"glsl/%c%c/%s.glsl", xxh_name[0], xxh_name[1], xxh_name);
+        snprintf(glsl_path, sizeof(glsl_path), DATA_PATH"glsl/%c/%s.glsl", xxh_name[0], xxh_name);
         file_mkpath(glsl_path, 0777);
         file_save(glsl_path, (const uint8_t *) string, length);
 

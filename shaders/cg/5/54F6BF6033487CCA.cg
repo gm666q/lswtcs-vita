@@ -44,9 +44,9 @@ uniform vec4 _faceOnTranslation;
 
 void main(
     vec4 COLOR,
-    vec2 TEXCOORD0,
-    vec2 TEXCOORD1,
-    vec3 cg_Vertex,
+    vec4 TEXCOORD0,
+    vec4 TEXCOORD1,
+    vec4 cg_Vertex,
 
     vec4 out cg_FrontColor : COLOR,
     vec4 out cg_TexCoord1 : TEXCOORD1,

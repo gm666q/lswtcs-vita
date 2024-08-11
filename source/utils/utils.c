@@ -428,7 +428,7 @@ char * str_xxhsum(const char * str, size_t size) {
         size = strlen(str);
     }
 
-    snprintf(hash, sizeof(hash), "%llX", XXH3_64bits(str, size));
+    snprintf(hash, sizeof(hash), "%016llX", XXH3_64bits(str, size));
 
     return strdup(hash);
 }
