@@ -23,8 +23,8 @@
 _Thread_local _egl_context* current_context = NULL;
 
 // Helpers for our handling of shaders
-GLboolean skip_next_compile = GL_FALSE;
-char next_shader_fname[256];
+_Thread_local GLboolean skip_next_compile = GL_FALSE;
+_Thread_local char next_shader_fname[256];
 
 GLint uniforms[GLUTIL_MAX_PROGRAMS * GLUTIL_MAX_UNIFORMS];
 

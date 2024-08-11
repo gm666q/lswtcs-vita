@@ -33,28 +33,36 @@
 // void stat_newlib_to_bionic(struct stat * src, stat64_bionic * dst);
 #include "reimpl/bits/_struct_converters.c"
 
-const char* fix_path(const char* filename) {
-    static char buf[512];
-    static const char* file = NULL;
+static _Thread_local char buf[512];
+static _Thread_local size_t i = 0;
 
-    if(filename[0] != '/') {
+const char *fix_path(const char *filename) {
+    const char* file = NULL;
+
+    if (filename[0] != '/') {
         return filename;
     }
 
     file = strstr(filename, EXTERNAL_DATA_PATH);
     if (file != NULL) {
-        snprintf(buf, sizeof(buf), "%s%s", DATA_PATH, file + strlen(EXTERNAL_DATA_PATH) + 1);
-        return buf;
+        char *offset = buf + i * (sizeof(buf) / 2);
+        snprintf(offset, sizeof(buf) / 2, "%s%s", DATA_PATH, file + strlen(EXTERNAL_DATA_PATH) + 1);
+        i = (i + 1) % 2;
+        return offset;
     }
     file = strstr(filename, EXTERNAL_OBB_PATH);
     if (file != NULL) {
-        snprintf(buf, sizeof(buf), "%s%s", DATA_PATH, file + strlen(EXTERNAL_OBB_PATH) + 1);
-        return buf;
+        char *offset = buf + i * (sizeof(buf) / 2);
+        snprintf(offset, sizeof(buf) / 2, "%s%s", DATA_PATH, file + strlen(EXTERNAL_OBB_PATH) + 1);
+        i = (i + 1) % 2;
+        return offset;
     }
     file = strstr(filename, INTERNAL_PATH);
     if (file != NULL) {
-        snprintf(buf, sizeof(buf), "%s%s", DATA_PATH, file + strlen(INTERNAL_PATH) + 1);
-        return buf;
+        char *offset = buf + i * (sizeof(buf) / 2);
+        snprintf(offset, sizeof(buf) / 2, "%s%s", DATA_PATH, file + strlen(INTERNAL_PATH) + 1);
+        i = (i + 1) % 2;
+        return offset;
     }
 
     return filename;
@@ -194,5 +202,58 @@ int ioctl_soloader(int fd, int request, ...) {
 int fsync_soloader(int fd) {
     int ret = fsync(fd);
     l_debug("fsync(%i): %i", fd, ret);
+    return ret;
+}
+
+int chdir_soloader(const char *__path) {
+    const char *p = fix_path(__path);
+
+    const int ret = chdir(p);
+
+    if (ret == 0)
+        l_debug("chdir(%s => %s): %i", __path, p, ret);
+    else
+        l_warn("chdir(%s => %s): %i", __path, p, ret);
+
+    return ret;
+}
+
+int mkdir_soloader(const char *_path, mode_t __mode) {
+    const char *p = fix_path(_path);
+
+    const int ret = mkdir(p, __mode);
+
+    if (ret == 0)
+        l_debug("mkdir(%s => %s, %u): %i", _path, p, __mode, ret);
+    else
+        l_warn("mkdir(%s => %s, %u): %i", _path, p, __mode, ret);
+
+    return ret;
+}
+
+int remove_soloader(const char *pathname) {
+    const char *p = fix_path(pathname);
+
+    const int ret = remove(p);
+
+    if (ret == 0)
+        l_debug("remove(%s => %s): %i", pathname, p, ret);
+    else
+        l_warn("remove(%s => %s): %i", pathname, p, ret);
+
+    return ret;
+}
+
+int rename_soloader(const char *old_filename, const char *new_filename) {
+    const char *old_p = fix_path(old_filename);
+    const char *new_p = fix_path(new_filename);
+
+    const int ret = rename(old_p, new_p);
+
+    if (ret == 0)
+        l_debug("rename(%s => %s, %s => %s): %i", old_filename, old_p, new_filename, new_p, ret);
+    else
+        l_warn("rename(%s => %s, %s => %s): %i", old_filename, old_p, new_filename, new_p, ret);
+
     return ret;
 }

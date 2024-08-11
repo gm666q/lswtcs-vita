@@ -188,10 +188,10 @@ so_default_dynlib default_dynlib[] = {
             { "puts", (uintptr_t)&puts },
         #endif
 
-        { "chdir", (uintptr_t)&chdir },
-        { "mkdir", (uintptr_t)&mkdir },
-        { "remove", (uintptr_t)&remove },
-        { "rename", (uintptr_t)&rename },
+        { "chdir", (uintptr_t)&chdir_soloader },
+        { "mkdir", (uintptr_t)&mkdir_soloader },
+        { "remove", (uintptr_t)&remove_soloader },
+        { "rename", (uintptr_t)&rename_soloader },
         { "write", (uintptr_t)&write },
 
 

@@ -2,6 +2,7 @@
  * Copyright (C) 2021      Andy Nguyen
  * Copyright (C) 2022      Rinnegatamante
  * Copyright (C) 2022-2024 Volodymyr Atamanenko
+ * Copyright (C) 2024      Jan Smialkowski
  *
  * This software may be modified and distributed under the terms
  * of the MIT license. See the LICENSE file for details.
@@ -93,6 +94,14 @@ int fcntl_soloader(int fd, int cmd, ...);
 int ioctl_soloader(int fd, int request, ... /* arg */);
 
 int fsync_soloader(int fd);
+
+int chdir_soloader(const char *__path);
+
+int mkdir_soloader(const char *_path, mode_t __mode);
+
+int remove_soloader(const char * pathname);
+
+int rename_soloader(const char* old_filename, const char* new_filename);
 
 #ifdef __cplusplus
 };
