@@ -16,8 +16,6 @@
 
 extern _Thread_local _egl_context* current_context;
 
-void reset_context(_egl_context* context);
-
 EGLBoolean eglInitialize(EGLDisplay dpy, EGLint *major, EGLint *minor) {
     l_debug("eglInitialize(0x%x)", (int)dpy);
 
@@ -279,8 +277,7 @@ EGLBoolean eglChooseConfig(EGLDisplay dpy, const EGLint *attrib_list,
 EGLContext eglCreateContext(EGLDisplay dpy, EGLConfig config,
                             EGLContext share_context,
                             const EGLint *attrib_list) {
-    _egl_context *context = malloc(sizeof(_egl_context));
-    reset_context(context);
+    _egl_context *context = calloc(1, sizeof(_egl_context));
     return context;
 }
 
@@ -309,7 +306,7 @@ EGLBoolean eglMakeCurrent(EGLDisplay dpy, EGLSurface draw, EGLSurface read,
         return EGL_FALSE;
     }
 
-    context->is_fake = ((char *) draw)[0] == 'p' ? EGL_TRUE : EGL_FALSE;
+    context->is_pbuffer = ((char *) draw)[0] == 'p' ? EGL_TRUE : EGL_FALSE;
     current_context = context;
 
     return EGL_TRUE;
@@ -371,8 +368,4 @@ EGLBoolean eglGetConfigs(EGLDisplay display, EGLConfig * configs,
     *num_config = 1;
 
     return EGL_TRUE;
-}
-
-void reset_context(_egl_context* context) {
-    memset(context, 0, sizeof(_egl_context));
 }

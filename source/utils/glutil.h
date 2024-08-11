@@ -27,8 +27,10 @@ extern "C" {
 
 typedef struct _egl_context {
     GLuint buffers[2];
-    EGLBoolean is_fake;
+    //EGLSurface draw;
+    EGLBoolean is_pbuffer;
     GLuint program;
+    //EGLSurface read;
     size_t texture;
     GLuint textures[16 * 2];
 } _egl_context;
