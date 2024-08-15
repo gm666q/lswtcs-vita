@@ -179,8 +179,7 @@ int callback_thread(SceSize args, void *argp) {
 }
 
 SceUID callback_init() {
-    SceUID thid = sceKernelCreateThread("callbackThread", callback_thread, 0x10000100, 0x10000, 0,
-                                        SCE_KERNEL_CPU_MASK_SYSTEM, NULL);
+    SceUID thid = sceKernelCreateThread("callbackThread", callback_thread, 0x10000100, 0x10000, 0, 0, NULL);
 
     if (thid >= 0) {
         sceKernelStartThread(thid, 0, NULL);
