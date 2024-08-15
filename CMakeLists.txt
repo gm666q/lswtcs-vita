@@ -89,6 +89,7 @@ add_executable(${CMAKE_PROJECT_NAME}
                source/utils/settings.c
                source/utils/tt_activity.c
                source/utils/utils.c
+               lib/falso_jni/ConvertUTF.c
                lib/falso_jni/FalsoJNI.c
                lib/falso_jni/FalsoJNI_ImplBridge.c
                lib/falso_jni/FalsoJNI_Logger.c

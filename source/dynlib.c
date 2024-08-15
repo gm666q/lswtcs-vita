@@ -364,7 +364,7 @@ so_default_dynlib default_dynlib[] = {
         { "glGetUniformLocation", (uintptr_t)&glGetUniformLocation_soloader },
         { "glGetVertexAttribiv", (uintptr_t)&glGetVertexAttribiv },
         { "glGetVertexAttribPointerv", (uintptr_t)&glGetVertexAttribPointerv },
-        { "glLinkProgram", (uintptr_t)&glLinkProgram },
+        { "glLinkProgram", (uintptr_t)&glLinkProgram_soloader },
         { "glReleaseShaderCompiler", (uintptr_t)&glReleaseShaderCompiler },
         { "glShaderSource", (uintptr_t)&glShaderSource_soloader },
         { "glTexImage2D", (uintptr_t)&glTexImage2D_soloader },

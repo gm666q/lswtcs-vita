@@ -11,6 +11,8 @@
 #include <falso_jni/jni.h>
 
 typedef struct TTActivity {
+    void (*nativeAddAssetsPath)(JNIEnv *, jclass, jobjectArray);
+
     void (*nativeCacheJNIVars)(JNIEnv *, jclass);
 
     void (*nativeOnCreate)(JNIEnv *, jclass);
@@ -51,7 +53,7 @@ typedef struct TTActivity {
 
     void (*nativeSetObbInfo)(JNIEnv *, jclass, jint, jint, jint, jint, jstring, jint);
 
-    void (*nativeSetPaths)(JNIEnv *, jclass, jstring, jstring);
+    void (*nativeSetPath)(JNIEnv *, jclass, jstring);
 
     void (*nativeSetScreenDimesions)(JNIEnv *, jclass, jfloat, jfloat);
 

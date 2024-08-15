@@ -230,6 +230,14 @@ GLint glGetUniformLocation_soloader(GLuint program, const GLchar *name) {
 #endif
 }
 
+void glLinkProgram_soloader(GLuint program) {
+    // This is kinda crude, but it fixes for double linking of some shaders
+    if (__builtin_return_address(0) == (void *)0x98576668) {
+        return;
+    }
+    glLinkProgram(program);
+}
+
 void glTexImage2D_soloader(GLenum target, GLint level, GLint internalformat, GLsizei width, GLsizei height,
                            GLint border, GLenum format, GLenum type, const void *pixels) {
 #ifndef SKIP_ERROR_HANDLING

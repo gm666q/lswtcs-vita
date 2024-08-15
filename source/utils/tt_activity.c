@@ -25,6 +25,7 @@ extern TTActivity activity;
 extern so_module so_mod;
 
 void tt_activity_init() {
+    LOAD_SYMBOL(nativeAddAssetsPath)
     LOAD_SYMBOL(nativeCacheJNIVars)
     LOAD_SYMBOL(nativeOnCreate)
     LOAD_SYMBOL(nativeOnKeyDown)
@@ -45,7 +46,7 @@ void tt_activity_init() {
     LOAD_SYMBOL(nativeSetManufacturer)
     LOAD_SYMBOL(nativeSetModel)
     LOAD_SYMBOL(nativeSetObbInfo)
-    LOAD_SYMBOL(nativeSetPaths)
+    LOAD_SYMBOL(nativeSetPath)
     LOAD_SYMBOL(nativeSetScreenDimesions)
     LOAD_SYMBOL(nativeSetSurface)
     LOAD_SYMBOL(nativeUpdateGamepadAxisValues)

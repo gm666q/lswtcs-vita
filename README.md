@@ -71,22 +71,22 @@ In order to properly install the game, you'll have to follow these steps precise
   use [ShaRKBR33D][shrkbrd] to get it quickly and easily.
 
 - <u>Legally</u> obtain your copy of Lego Star Wars: The Complete Saga for Android in a form of an `.apk` file and data
-  files. This port is tailored for the v2.0.0.5(2005) version of the game. Older versions may work too, but no support
-  is provided for them. **Newer versions will not work**.
+  files. This port is tailored for the v2.0.2.02(20202) version of the game. **Older versions will not work**. Newer
+  versions may work, but no support is provided for them.
 
     - If you have it installed on your phone, you can [get all the required files directly from it][unpack-on-phone] or
-      by using any APK extractor you can find on Google Play.
+      by using any APK extractor you can find on Google Play. **Note, this app uses split apks**.
 
 > ℹ️ Verify that your build is the correct one using **sha1sum** (can also be found as an online tool). sha1sum for
-> `lib/armeabi-v7a/libTTapp.so` **must** be `d7092cecc1dce4e4d69bc78d0de8522349efa162`
+> `lib/armeabi-v7a/libTTapp.so` **must** be `291321330a3789414cab7d411dae64debc990ad6`
 
 - Open the `.apk` with any zip explorer (like [7-Zip](https://www.7-zip.org/)) and extract the file
   `lib/armeabi-v7a/libTTapp.so` from the `.apk` into `ux0:data/lswtcs/` on your Vita. Example of a correct resulting
   path: `ux0:data/lswtcs/libTTapp.so`
 
-- Fetch the game data files from your device. You can find them at `/sdcard/Android/obb/com.wb.lego.tcs`. Copy the file
-  you find there (`main.2005.com.wb.lego.tcs.obb`) to `ux0:data/lswtcs/` on your Vita. Example of a correct resulting
-  path: `ux0:data/lswtcs/main.2005.com.wb.lego.tcs.obb`
+- Fetch the game data files from your device. You can find them in the internal data folder of the device, **rooted
+  device might be required**. Copy the file you find there (`Audio.dat`, `Levels.dat`, `Other.dat`, and `Textures.dat`)
+  to `ux0:data/lswtcs/` on your Vita. Example of a correct resulting path: `ux0:data/lswtcs/Audio.dat`.
 
 - Install `lswtcs.vpk` (from [Releases][latest-release]).
 
@@ -100,9 +100,9 @@ WIP
 Known Issues
 ------------
 
-- Cutscenes don't play and must be manually skipped (press start)
-- On the "Touch to Start" screen you must press the start button, otherwise only the touch screen will work
-- Some pushable objects don't work, making it impossible to complete some levels.
+- Cutscenes don't play and must be manually skipped (press start). Level 1-2, and 3-6 cutscenes can't be skipped, making
+  it impossible to finish.
+- Some sounds don't play correctly
 
 Build Instructions (For Developers)
 ----------------

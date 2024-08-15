@@ -16,6 +16,7 @@
 #include <psp2/kernel/threadmgr.h>
 
 #include <falso_jni/FalsoJNI.h>
+#include <falso_jni/FalsoJNI_ImplBridge.h>
 #include <so_util/so_util.h>
 #include <pthread.h>
 
@@ -189,17 +190,29 @@ SceUID callback_init() {
 }
 
 void tt_activity_on_create() {
+    JavaDynArray paths;
+    jda_alloc_static(&paths, 4, FIELD_TYPE_OBJECT);
+    ((jobject *) paths.array)[0] = ASSET_PACK_AUDIO_PATH;
+    ((jobject *) paths.array)[1] = ASSET_PACK_LEVELS_PATH;
+    ((jobject *) paths.array)[2] = ASSET_PACK_OTHERS_PATH;
+    ((jobject *) paths.array)[3] = ASSET_PACK_TEXTURES_PATH;
+
     activity.nativeCacheJNIVars(&jni, ACTIVITY_CLASS);
     activity.nativeSetManufacturer(&jni, ACTIVITY_CLASS,ANDROID_OS_BUILD_MANUFACTURER);
     activity.nativeSetModel(&jni, ACTIVITY_CLASS,ANDROID_OS_BUILD_MODEL);
     activity.nativeSetObbInfo(&jni, ACTIVITY_CLASS,OBB_INFO_MAIN_VERSION, OBB_INFO_MAIN_SIZE, OBB_INFO_PATCH_VERSION,
                               OBB_INFO_PATCH_SIZE, APK_VERSION_NAME, OBB_INFO_FORCE_ETC1);
+    activity.nativeAddAssetsPath(&jni, ACTIVITY_CLASS, &paths);
     activity.nativeSetCaps(&jni, ACTIVITY_CLASS, 0);
-    activity.nativeSetPaths(&jni, ACTIVITY_CLASS,ACTIVITY_INTERNAL_PATH, ACTIVITY_EXTERNAL_PATH);
+
+    // startGame
+    activity.nativeSetPath(&jni, ACTIVITY_CLASS, ACTIVITY_INTERNAL_PATH);
     activity.nativeSetLanguage(&jni, ACTIVITY_CLASS, (jstring) locale_str());
     activity.nativeSetAndroidVersion(&jni, ACTIVITY_CLASS,ANDROID_OS_BUILD_VERSION_RELEASE);
     activity.nativeSetAssetManager(&jni, ACTIVITY_CLASS, (jobject) 0x24242424);
     activity.nativeOnCreate(&jni, ACTIVITY_CLASS);
+
+    //jda_free(&paths);
 }
 
 void tt_activity_surface_changed(jobject surface) {

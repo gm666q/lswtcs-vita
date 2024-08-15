@@ -40,6 +40,8 @@ const GLubyte *glGetString_soloader(GLenum name);
 
 GLint glGetUniformLocation_soloader(GLuint program, const GLchar *name);
 
+void glLinkProgram_soloader(GLuint program);
+
 void glShaderSource_soloader(GLuint shader, GLsizei count, const GLchar *const*string, const GLint *length);
 
 void glTexImage2D_soloader(GLenum target, GLint level, GLint internalformat, GLsizei width, GLsizei height,

@@ -43,20 +43,19 @@ const char *fix_path(const char *filename) {
         return filename;
     }
 
-    file = strstr(filename, EXTERNAL_DATA_PATH);
-    if (file != NULL) {
-        char *offset = buf + i * (sizeof(buf) / 2);
-        snprintf(offset, sizeof(buf) / 2, "%s%s", DATA_PATH, file + strlen(EXTERNAL_DATA_PATH) + 1);
-        i = (i + 1) % 2;
-        return offset;
+    if(strcmp(filename, ASSET_PACK_AUDIO_PATH) == 0) {
+        return DATA_PATH "Audio.dat";
     }
-    file = strstr(filename, EXTERNAL_OBB_PATH);
-    if (file != NULL) {
-        char *offset = buf + i * (sizeof(buf) / 2);
-        snprintf(offset, sizeof(buf) / 2, "%s%s", DATA_PATH, file + strlen(EXTERNAL_OBB_PATH) + 1);
-        i = (i + 1) % 2;
-        return offset;
+    if(strcmp(filename, ASSET_PACK_LEVELS_PATH) == 0) {
+        return DATA_PATH "Levels.dat";
     }
+    if(strcmp(filename, ASSET_PACK_OTHERS_PATH) == 0) {
+        return DATA_PATH "Others.dat";
+    }
+    if(strcmp(filename, ASSET_PACK_TEXTURES_PATH) == 0) {
+        return DATA_PATH "Textures.dat";
+    }
+
     file = strstr(filename, INTERNAL_PATH);
     if (file != NULL) {
         char *offset = buf + i * (sizeof(buf) / 2);
