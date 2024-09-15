@@ -19,7 +19,7 @@ Lego Star Wars: The Complete Saga is a Lego-themed action-adventure video game b
 construction toys. It is a combination of the game Lego Star Wars: The Video Game and its sequel, Lego Star Wars
 II: The Original Trilogy, which span the first six episodes of the Skywalker Saga.
 
-This repository contains a loader for **the Android release of Lego Star Wars: The Complete Saga v2.0.0.5**, based on
+This repository contains a loader for **the Android release of Lego Star Wars: The Complete Saga v2.0.2.02**, based on
 the [Android SO Loader by TheFloW][gtasa]. The loader provides a tailored, minimalistic Android-like environment to run
 the official ARMv7 game executable on the PS Vita.
 
@@ -110,6 +110,7 @@ Known Issues
 ------------
 
 - Intermittent crashing
+- Slow load times
 - Sounds are a bit off (not playing, playing too fast, abrupt transitions, etc.)
 - Touch screen is required for free play switching (this is consistent with Android, but ideally it will be patched)
 

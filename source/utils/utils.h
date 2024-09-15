@@ -99,6 +99,16 @@ bool file_save(const char * path, const uint8_t * buffer, size_t size);
 size_t file_size(const char * path);
 
 /**
+ * Get SHA1 hash of file contents.
+ *
+ * @param[in] path Full path of the source file.
+ *
+ * @return 40-char long null-terminated string containing SHA1 hash. Can be
+ *         NULL in case of an error. Must be freed by the caller.
+ */
+char * file_sha1sum(const char * path);
+
+/**
  * Get XXH3_64bits hash of file contents.
  *
  * @param[in] path Full path of the source file.
@@ -187,6 +197,18 @@ bool str_starts_with(const char * str, const char * prefix);
  * @return `true` if the string ends with the substring, `false` otherwise.
  */
 bool str_ends_with(const char * str, const char * suffix);
+
+/**
+ * Get SHA1 hash of a string or byte array.
+ *
+ * @param[in] str  Source string or byte array.
+ * @param[in] size Length of the source string or byte array. If `0` is
+ *                 specified, `str` is treated as a null-terminated string.
+ *
+ * @return 40-char long null-terminated string containing SHA1 hash. Can be
+ *         NULL in case of an error. Must be freed by the caller.
+ */
+char * str_sha1sum(const char * str, size_t size);
 
 /**
  * Get XXH3_64bits hash of a string or byte array.

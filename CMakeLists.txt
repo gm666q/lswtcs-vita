@@ -94,6 +94,7 @@ add_executable(${CMAKE_PROJECT_NAME}
                lib/falso_jni/FalsoJNI_ImplBridge.c
                lib/falso_jni/FalsoJNI_Logger.c
                lib/fios/fios.c
+               lib/sha1/sha1.c
                lib/so_util/so_util.c
                lib/xxhash/xxhash.c)
 
@@ -155,7 +156,7 @@ vita_create_vpk(${VITA_VPKNAME}.vpk ${VITA_TITLEID} eboot.bin
                 ${CMAKE_SOURCE_DIR}/extras/livearea/startup.png sce_sys/livearea/contents/startup.png
                 ${CMAKE_SOURCE_DIR}/extras/livearea/bg0.png sce_sys/livearea/contents/bg0.png
                 ${CMAKE_SOURCE_DIR}/extras/livearea/template.xml sce_sys/livearea/contents/template.xml
-                #${CMAKE_SOURCE_DIR}/shaders/gxp gxp
+                ${CMAKE_SOURCE_DIR}/shaders/gxp gxp
                 )
 
 add_custom_target(send
