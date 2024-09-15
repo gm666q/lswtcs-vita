@@ -95,14 +95,23 @@ In order to properly install the game, you'll have to follow these steps precise
 Controls
 --------
 
-WIP
+|       Button        | Action                 |
+|:-------------------:|:-----------------------|
+|     Left stick      | Move                   |
+| Directional buttons | Move                   |
+|      Triangle       | Tag (switch character) |
+|       Circle        | Special (build/use)    |
+|        Cross        | Jump                   |
+|       Square        | Action (attack)        |
+|    Touch screen     | Character toggle       |
+|        Start        | Start/Pause            |
 
 Known Issues
 ------------
 
-- Cutscenes don't play and must be manually skipped (press start). Level 1-2, and 3-6 cutscenes can't be skipped, making
-  it impossible to finish.
-- Some sounds don't play correctly
+- Intermittent crashing
+- Sounds are a bit off (not playing, playing too fast, abrupt transitions, etc.)
+- Touch screen is required for free play switching (this is consistent with Android, but ideally it will be patched)
 
 Build Instructions (For Developers)
 ----------------
@@ -123,6 +132,11 @@ git clone https://github.com/vitasdk-softfp/vdpm
 
 All the required libraries should get installed automatically if you follow the installation process
 from https://vitasdk.org/.
+
+### OpenSL ES
+
+A custom version of [OpenSL ES](https://github.com/gm666q/opensles) built with `LSWTCS=1` is required for the port to
+function correctly.
 
 After all these requirements are met, you can compile the loader with the following commands:
 
@@ -145,9 +159,9 @@ Credits
 -------
 
 - [Andy "The FloW" Nguyen][flow] for the original .so loader.
-- [Rinnegatamante][rinne] for help with rendering issues.
+- [Rinnegatamante][rinne] for help with rendering and sound issues.
 - [Volodymyr Atamanenko][v-atamanenko] for
-  the [boilerplate template](https://github.com/v-atamanenko/soloader-boilerplate)
+  the [boilerplate template](https://github.com/v-atamanenko/soloader-boilerplate) and help with sound issues.
 - [GrapheneCt][graph] for CapUnlocker.
 
 License
