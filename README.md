@@ -1,6 +1,6 @@
 <div align=center>
 
-![banner](https://raw.githubusercontent.com/gist/v-atamanenko/e547f3f0667e4684ca665b11a7ce1e3c/raw/6dd7ce900576ae334cda1886095c09a784663507/solobop_logo.svg "Banner")
+<img src="extras/screenshots/banner.png" alt="Banner" width="35%">
 
 </div>
 
