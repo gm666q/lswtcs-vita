@@ -76,6 +76,8 @@ In order to properly install the game, you'll have to follow these steps precise
 
     - If you have it installed on your phone, you can [get all the required files directly from it][unpack-on-phone] or
       by using any APK extractor you can find on Google Play. **Note, this app uses split apks**.
+    - You can follow this [guide](https://gist.github.com/CatoTheYounger97/b7bacc48bf3fc041e673c8291edf871a) by
+      CatoTheYounger97 to help with extracting the data files.
 
 > ℹ️ Verify that your build is the correct one using **sha1sum** (can also be found as an online tool). sha1sum for
 > `lib/armeabi-v7a/libTTapp.so` **must** be `291321330a3789414cab7d411dae64debc990ad6`
@@ -164,6 +166,7 @@ Credits
 - [Volodymyr Atamanenko][v-atamanenko] for
   the [boilerplate template](https://github.com/v-atamanenko/soloader-boilerplate) and help with sound issues.
 - [GrapheneCt][graph] for CapUnlocker.
+- [CatoTheYounger97](https://github.com/CatoTheYounger97/) for help with the guide on how to get the APK and data files.
 
 License
 -------
