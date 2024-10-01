@@ -12,12 +12,12 @@
 
 #define CONFIG_FILE_PATH DATA_PATH"config.txt"
 
-int  setting_sampleSetting;
-bool setting_sampleSetting2;
+bool setting_openWebBrowser;
+bool setting_patchControls;
 
 void settings_reset() {
-    setting_sampleSetting  = 1;
-    setting_sampleSetting2 = true;
+    setting_openWebBrowser = false;
+    setting_patchControls = true;
 }
 
 void settings_load() {
@@ -30,8 +30,8 @@ void settings_load() {
 
     if (config) {
         while (EOF != fscanf(config, "%[^ ] %d\n", buffer, &value)) {
-            if 		(strcmp("setting_sampleSetting", buffer) == 0) 	setting_sampleSetting  = (int)value;
-            else if (strcmp("setting_sampleSetting2", buffer) == 0) setting_sampleSetting2 = (bool)value;
+            if (strcmp("setting_openWebBrowser", buffer) == 0) setting_openWebBrowser = value == 1 ? true : false;
+            else if (strcmp("setting_patchControls", buffer) == 0) setting_patchControls = value == 1 ? true : false;
         }
         fclose(config);
     }
@@ -41,8 +41,8 @@ void settings_save() {
     FILE *config = fopen(CONFIG_FILE_PATH, "w+");
 
     if (config) {
-        fprintf(config, "%s %d\n", "setting_sampleSetting", (int)(setting_sampleSetting));
-        fprintf(config, "%s %d\n", "setting_sampleSetting2", (int)(setting_sampleSetting2));
+        fprintf(config, "%s %d\n", "setting_openWebBrowser", setting_openWebBrowser ? 1 : 0);
+        fprintf(config, "%s %d\n", "setting_patchControls", setting_patchControls ? 1 : 0);
         fclose(config);
     }
 }

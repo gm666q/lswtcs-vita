@@ -30,6 +30,55 @@
 #include <libc_bridge/libc_bridge.h>
 #endif
 
+SceSystemParamLang get_sce_lang();
+
+const char * country_code_str() {
+    switch (get_sce_lang()) {
+        case SCE_SYSTEM_PARAM_LANG_JAPANESE:
+            return "JP";
+        case SCE_SYSTEM_PARAM_LANG_ENGLISH_US:
+            return "US";
+        case SCE_SYSTEM_PARAM_LANG_FRENCH:
+            return "FR";
+        case SCE_SYSTEM_PARAM_LANG_SPANISH:
+            return "ES";
+        case SCE_SYSTEM_PARAM_LANG_GERMAN:
+            return "DE";
+        case SCE_SYSTEM_PARAM_LANG_ITALIAN:
+            return "IT";
+        case SCE_SYSTEM_PARAM_LANG_DUTCH:
+            return "NL";
+        case SCE_SYSTEM_PARAM_LANG_PORTUGUESE_PT:
+            return "PT";
+        case SCE_SYSTEM_PARAM_LANG_RUSSIAN:
+            return "RU";
+        case SCE_SYSTEM_PARAM_LANG_KOREAN:
+            return "KR";
+        case SCE_SYSTEM_PARAM_LANG_CHINESE_T:
+            return "TW";
+        case SCE_SYSTEM_PARAM_LANG_CHINESE_S:
+            return "CN";
+        case SCE_SYSTEM_PARAM_LANG_FINNISH:
+            return "FI";
+        case SCE_SYSTEM_PARAM_LANG_SWEDISH:
+            return "SE";
+        case SCE_SYSTEM_PARAM_LANG_DANISH:
+            return "DK";
+        case SCE_SYSTEM_PARAM_LANG_NORWEGIAN:
+            return "NO";
+        case SCE_SYSTEM_PARAM_LANG_POLISH:
+            return "PL";
+        case SCE_SYSTEM_PARAM_LANG_PORTUGUESE_BR:
+            return "BR";
+        case SCE_SYSTEM_PARAM_LANG_ENGLISH_GB:
+            return "GB";
+        case SCE_SYSTEM_PARAM_LANG_TURKISH:
+            return "TR";
+        default:
+            return "US";
+    }
+}
+
 uint64_t current_timestamp_ms() {
     struct timeval te;
     gettimeofday(&te, NULL);
@@ -258,6 +307,14 @@ char * file_xxhsum(const char * path) {
     return ret;
 }
 
+inline SceSystemParamLang get_sce_lang() {
+    SceSystemParamLang lang;
+    if (sceAppUtilSystemParamGetInt(SCE_SYSTEM_PARAM_ID_LANG, (int *) &lang) != SCE_OK) {
+        return SCE_SYSTEM_PARAM_LANG_MAX_VALUE;
+    }
+    return lang;
+}
+
 bool is_dir(const char * path) {
     DIR* d = opendir(path);
 
@@ -270,12 +327,7 @@ bool is_dir(const char * path) {
 }
 
 const char * locale_str() {
-    SceSystemParamLang lang;
-    if (sceAppUtilSystemParamGetInt(SCE_SYSTEM_PARAM_ID_LANG, (int *) &lang) != SCE_OK) {
-        lang = SCE_SYSTEM_PARAM_LANG_MAX_VALUE;
-    }
-
-    switch (lang) {
+    switch (get_sce_lang()) {
         case SCE_SYSTEM_PARAM_LANG_JAPANESE:
             return "ja-JP";
         case SCE_SYSTEM_PARAM_LANG_ENGLISH_US:

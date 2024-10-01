@@ -19,11 +19,13 @@
 extern "C" {
 #endif
 
-extern int  setting_sampleSetting;
-extern bool setting_sampleSetting2;
+extern bool setting_openWebBrowser;
+extern bool setting_patchControls;
 
 void settings_load();
+
 void settings_save();
+
 void settings_reset();
 
 #ifdef __cplusplus

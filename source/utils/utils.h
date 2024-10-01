@@ -24,6 +24,12 @@ extern "C" {
 #include <stdint.h>
 
 /**
+ *
+ * @return
+ */
+const char * country_code_str();
+
+/**
  * Get Unix timestamp in milliseconds.
  *
  * @return Number of milliseconds that have elapsed since January 1, 1970.
