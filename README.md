@@ -114,7 +114,6 @@ Known Issues
 - Intermittent crashing
 - Slow load times
 - Sounds are a bit off (not playing, playing too fast, abrupt transitions, etc.)
-- Touch screen is required for free play switching (this is consistent with Android, but ideally it will be patched)
 
 Build Instructions (For Developers)
 ----------------

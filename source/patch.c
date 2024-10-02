@@ -14,18 +14,23 @@
 
 #include <psp2/kernel/threadmgr.h>
 
+#include <string.h>
+
 #include <kubridge.h>
 #include <so_util/so_util.h>
 
+#include "reimpl/keycodes.h"
 #include "reimpl/native_window.h"
+#include "utils/gamepad.h"
 #include "utils/logger.h"
+#include "utils/settings.h"
 #include "utils/utils.h"
 
 extern so_module so_mod;
 
 so_hook _Z11AndroidMainPv_hook;
 
-// AndroidMain(void*)
+/// AndroidMain(void*)
 void *_Z11AndroidMainPv(void *param_1) {
     sceKernelChangeThreadCpuAffinityMask(sceKernelGetThreadId(), SCE_KERNEL_CPU_MASK_USER_0);
     return SO_CONTINUE(void*, _Z11AndroidMainPv_hook, param_1);
@@ -33,15 +38,56 @@ void *_Z11AndroidMainPv(void *param_1) {
 
 so_hook _Z17renderThread_mainPv_hook;
 
-// renderThread_main(void*)
+/// renderThread_main(void*)
 void *_Z17renderThread_mainPv(void *param_1) {
     sceKernelChangeThreadCpuAffinityMask(sceKernelGetThreadId(), SCE_KERNEL_CPU_MASK_USER_1);
     return SO_CONTINUE(void*, _Z17renderThread_mainPv_hook, param_1);
 }
 
+so_hook _ZN15NuInputDevicePS21GetGamePadButtonIndexEiPi_hook;
+
+/// NuInputDevicePS::GetGamePadButtonIndex(int, int*)
+unsigned int _ZN15NuInputDevicePS21GetGamePadButtonIndexEiPi(int android_code, int *is_success) {
+    *is_success = 1;
+
+    switch (android_code) {
+        case AKEYCODE_HOME:
+        case AKEYCODE_BUTTON_START:
+            return GAMEPAD_START;
+        case AKEYCODE_DPAD_UP:
+        case AKEYCODE_DPAD_DOWN:
+        case AKEYCODE_DPAD_LEFT:
+        case AKEYCODE_DPAD_RIGHT:
+            return 0;
+        case AKEYCODE_BUTTON_A:
+            return GAMEPAD_JUMP;
+        case AKEYCODE_BUTTON_B:
+            return GAMEPAD_SPECIAL;
+        case AKEYCODE_BUTTON_X:
+            return GAMEPAD_ACTION;
+        case AKEYCODE_BUTTON_Y:
+            return GAMEPAD_TAG;
+        case AKEYCODE_BUTTON_L1:
+            return GAMEPAD_L1;
+        case AKEYCODE_BUTTON_R1:
+            return GAMEPAD_R1;
+        case AKEYCODE_BUTTON_L2:
+            return GAMEPAD_L2;
+        case AKEYCODE_BUTTON_R2:
+            return GAMEPAD_R2;
+        case AKEYCODE_BUTTON_THUMBL:
+            return GAMEPAD_L3;
+        case AKEYCODE_BUTTON_THUMBR:
+            return GAMEPAD_R3;
+        default:
+            *is_success = 0;
+            return 0;
+    }
+}
+
 so_hook _ZN8NuThread10ThreadMainEPv_hook;
 
-// NuThread::ThreadMain(void*)
+/// NuThread::ThreadMain(void*)
 void *_ZN8NuThread10ThreadMainEPv(void *param_1) {
     sceKernelChangeThreadCpuAffinityMask(sceKernelGetThreadId(), SCE_KERNEL_CPU_MASK_USER_2);
     return SO_CONTINUE(void*, _ZN8NuThread10ThreadMainEPv_hook, param_1);
@@ -65,8 +111,16 @@ int NuFileOpen(char *param_1, int param_2) {
 void so_patch(void) {
     _Z11AndroidMainPv_hook = hook_addr((uintptr_t) so_symbol(&so_mod, "_Z11AndroidMainPv"),
                                        (uintptr_t) &_Z11AndroidMainPv);
+
     _Z17renderThread_mainPv_hook = hook_addr((uintptr_t) so_symbol(&so_mod, "_Z17renderThread_mainPv"),
                                              (uintptr_t) &_Z17renderThread_mainPv);
+
+    if (setting_patchControls == true) {
+        _ZN15NuInputDevicePS21GetGamePadButtonIndexEiPi_hook = hook_addr(
+            (uintptr_t) so_symbol(&so_mod, "_ZN15NuInputDevicePS21GetGamePadButtonIndexEiPi"),
+            (uintptr_t) &_ZN15NuInputDevicePS21GetGamePadButtonIndexEiPi);
+    }
+
     _ZN8NuThread10ThreadMainEPv_hook = hook_addr((uintptr_t) so_symbol(&so_mod, "_ZN8NuThread10ThreadMainEPv"),
                                                  (uintptr_t) &_ZN8NuThread10ThreadMainEPv);
 
