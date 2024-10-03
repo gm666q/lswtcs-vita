@@ -97,16 +97,18 @@ In order to properly install the game, you'll have to follow these steps precise
 Controls
 --------
 
-|       Button        | Action                 |
-|:-------------------:|:-----------------------|
-|     Left stick      | Move                   |
-| Directional buttons | Move                   |
-|      Triangle       | Tag (switch character) |
-|       Circle        | Special (build/use)    |
-|        Cross        | Jump                   |
-|       Square        | Action (attack)        |
-|    Touch screen     | Character toggle       |
-|        Start        | Start/Pause            |
+|             Button             | Action                 |
+|:------------------------------:|:-----------------------|
+| Left stick/Directional buttons | Move                   |
+|            Triangle            | Tag (switch character) |
+|             Circle             | Special (build/use)    |
+|             Cross              | Jump                   |
+|             Square             | Action (attack)        |
+|             L1/L2              | Character toggle up    |
+|             R1/R2              | Character toggle down  |
+|             Start              | Start/Pause            |
+
+Touch screen/Touch pad can be used to interact with ui elements
 
 Known Issues
 ------------
