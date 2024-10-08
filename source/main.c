@@ -98,45 +98,61 @@ void poll_pad() {
 }
 
 void poll_touch() {
+    static SceUInt8 ids[8] = {0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff};
     static SceTouchData old_touch, touch;
 
     sceTouchPeek(SCE_TOUCH_PORT_FRONT, &touch, 1);
 
     for (SceUInt32 i = 0; i < touch.reportNum; ++i) {
-        // TODO: This could be a problem
-        const SceUInt8 id = touch.report[i].id & 0x07;
+        const SceUInt8 id = touch.report[i].id;
         const float x = (float) touch.report[i].x / 2.0f;
         const float y = (float) touch.report[i].y / 2.0f;
 
         int is_move = 0;
-        for (SceUInt32 j = 0; j < old_touch.reportNum; j++) {
-            if (touch.report[i].id == old_touch.report[j].id) {
+        for (SceUInt32 j = 0; j < old_touch.reportNum; ++j) {
+            if (id == old_touch.report[j].id) {
                 is_move = 1;
                 break;
             }
         }
 
         if (is_move == 0) {
-            activity.nativeOnTouchDown(&jni, ACTIVITY_CLASS, id, id, x, y);
+            for (size_t j = 0; j < sizeof(ids) / sizeof(SceUInt8); ++j) {
+                if (ids[j] == 0xff) {
+                    ids[j] = id;
+                    activity.nativeOnTouchDown(&jni, ACTIVITY_CLASS, j, j, x, y);
+                    break;
+                }
+            }
         } else {
-            activity.nativeOnTouchMove(&jni, ACTIVITY_CLASS, id, id, x, y);
+            for (size_t j = 0; j < sizeof(ids) / sizeof(SceUInt8); ++j) {
+                if (ids[j] == id) {
+                    activity.nativeOnTouchMove(&jni, ACTIVITY_CLASS, j, j, x, y);
+                    break;
+                }
+            }
         }
     }
 
     for (SceUInt32 i = 0; i < old_touch.reportNum; ++i) {
-        // TODO: This could be a problem
-        const SceUInt8 id = old_touch.report[i].id & 0x07;
+        const SceUInt8 id = old_touch.report[i].id;
 
         int is_up = 1;
-        for (int j = 0; j < touch.reportNum; j++) {
-            if (touch.report[j].id == old_touch.report[i].id) {
+        for (SceUInt32 j = 0; j < touch.reportNum; ++j) {
+            if (touch.report[j].id == id) {
                 is_up = 0;
                 break;
             }
         }
 
         if (is_up == 1) {
-            activity.nativeOnTouchUp(&jni, ACTIVITY_CLASS, id, id);
+            for (size_t j = 0; j < sizeof(ids) / sizeof(SceUInt8); ++j) {
+                if (ids[j] == id) {
+                    ids[j] = 0xff;
+                    activity.nativeOnTouchUp(&jni, ACTIVITY_CLASS, j, j);
+                    break;
+                }
+            }
         }
     }
 
